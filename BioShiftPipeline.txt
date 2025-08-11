@@ -23,7 +23,7 @@ FOLDERS = {
     "output": Path("outputs"),
 }
 
-#openai.api_key = "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"
+openai.api_key = "USE YOUR API KEY"
 if openai.api_key is None:
     sys.exit("❌  Environment variable OPENAI_API_KEY not set")
 
@@ -409,3 +409,4 @@ if __name__ == "__main__":
         else:
             print(f"⚠️  Unknown mode {args.mode}")
     print("\n✅ Pipeline finished for all samples.")
+
