@@ -1,0 +1,7 @@
+The observed shifts in Porphyromonas gingivalis and Tannerella forsythia, both bacteria commonly associated with gum disease, suggest an increase in their presence in the microbiome. This could indicate a dysbiosis in the oral microbiota, leading to an imbalance that contributes to the progression of gum disease.
+
+The observed shifts in IL-1B and IL-6, both pro-inflammatory cytokines, suggest an increase in their levels in response to the presence of pathogenic bacteria. This inflammatory response is a key component of the immune reaction to gum disease, as these cytokines play a role in recruiting immune cells and promoting tissue damage.
+
+The observed shift in mononuclear phagocytes, a type of immune cell involved in the inflammatory response, further supports the idea of an active immune reaction in gum disease. An increase in mononuclear phagocytes suggests an influx of immune cells to the site of infection, where they work to eliminate pathogens and resolve inflammation.
+
+Overall, the observed shifts in these biological groups point towards an inflammatory response to the presence of pathogenic bacteria in gum disease, highlighting the complex interplay between the microbiome and the immune system in the development and progression of this oral health condition.

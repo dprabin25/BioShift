@@ -1,0 +1,11 @@
+| Element              | GPT shift 2 | Biological Group       | Group ID based on Biological Group | Notes (if any) |
+|----------------------|-------------|------------------------|-------------------------------------|----------------|
+| IL-1B               | 1           | Cytokines              | 1                                   |                |
+| IL-6                | 1           | Cytokines              | 1                                   |                |
+| TNF                 | 1           | Cytokines              | 1                                   |                |
+| Mononuclear phagocytes | 1        | Immune cells           | 2                                   |                |
+| Antigen-presenting cells | 1     | Immune cells           | 2                                   |                |
+| Th17                | 1           | T cells                | 3                                   |                |
+| Porphyromonas gingivalis | 1     | Bacteria               | 4                                   |                |
+| Treponema denticola  | 1         | Bacteria               | 4                                   |                |
+| Tannerella forsythia | 1          | Bacteria               | 4                                   |                |
