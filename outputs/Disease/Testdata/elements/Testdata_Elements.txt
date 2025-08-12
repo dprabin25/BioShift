@@ -1,0 +1,9 @@
+IL-1B
+IL-6
+TNF
+Mononuclear phagocytes
+Antigen-presenting cells
+Th17
+Porphyromonas gingivalis
+Treponema denticola
+Tannerella forsythia
