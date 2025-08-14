@@ -1,6 +1,5 @@
 # BioShift
-BioShift is a structured prompt based framework that leverages LLMs that are broadly trained text on the internet, e.g., ChatGPT . BioShift is designed as interpretive engines to mimic expert reasoning in immune-microbiome analysis. Our approach guides users through a structured analysis workflow that begins by scanning for well-known shifts and coordinated patterns, mirroring initial expert steps of validating biological signals and ensuring the observations are meaningful. This is followed by the generation of biological interpretations, which users are then required to validate through manual literature review. This review process ensures scientific rigor and also serves as a valuable training exercise for researchers new to the field, helping them develop critical knowledge of immune–microbiome interactions. As a case study, we applied BioShift to a real-world, longitudinal multi-omics dataset from a patient with periodontitis. This application demonstrates how a prompt-based approach facilitates the extraction of interpretable, literature-grounded insights from immunological and microbial data. 
-
+BioShift is a structured, LLM-powered framework that guides immune–microbiome analysis through an expert-like workflow. It begins by scanning data for known shifts and coordinated patterns to validate biological signals, then generates AI-driven interpretations, which users confirm through manual literature review to ensure scientific rigor. This approach not only produces reliable, interpretable results but also serves as a training tool for researchers, building knowledge of immune–microbiome interactions.
 
 ## Setting up Your API credits and getting API key
 You may modify codes in BioShiftPipeline.py based on your Large Language model.
@@ -112,34 +111,34 @@ We originally used OpenAI, but you can adjust the contents of these files to wor
 
 1. Observed Data – Bulk (All files in inputs/observed/)
 
-| Command                                                                                                       | What it does                                                                       |
-| ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `python BioShiftPipeline.py --context disease --mode shift_only`                                            | Runs **shift calculation only** on **all** observed CSVs.                          |
-| `python BioShiftPipeline.py --context healthy --mode full_with_graphviz`                                    | Runs **full pipeline + Graphviz** on all observed CSVs.                            |
-| `python BioShiftPipeline.py --context disease --mode full_no_graphviz`                                      | Runs **full pipeline without Graphviz** on all observed CSVs.                      |
-| `python BioShiftPipeline.py --context healthy --mode interpret_only`                                        | Runs **Prompt 3 only** on all samples (expects existing Table 3 per sample).       |
-| `python BioShiftPipeline.py --context disease --mode interpret_and_graphviz`                                | Runs **Prompt 3 + Graphviz** on all samples (expects existing Table 3 per sample). |
-| `python BioShiftPipeline.py --context healthy --mode graphviz_only`                                         | Runs **Graphviz only** on all samples (expects existing Table 3 per sample).       |
-| `python BioShiftPipeline.py --context disease --mode full_no_graphviz --observed_dir "C:/path/to/observed"` | Same as above but reads observed CSVs from a **custom directory**.                 |
+| Command                                                                                                     | What it does                                                                                  |
+| ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `python BioShiftPipeline.py --context disease --mode shift_only`                                            | Runs **shift calculation only** on **all** observed CSVs.                                     |
+| `python BioShiftPipeline.py --context healthy --mode full_with_graphviz`                                    | Runs **full pipeline (A/B → Tables → 3/INT → Co) + Graphviz** on **all** observed CSVs.       |
+| `python BioShiftPipeline.py --context disease --mode full_no_graphviz`                                      | Runs **full pipeline (A/B → Tables → 3/INT → Co) without Graphviz** on **all** observed CSVs. |
+| `python BioShiftPipeline.py --context healthy --mode interpret_only`                                        | Runs **Prompt 3 only** on all samples (expects existing Table 3 per sample).                  |
+| `python BioShiftPipeline.py --context disease --mode interpret_and_graphviz`                                | Runs **Prompt 3 + Graphviz** on all samples (expects existing Table 3 per sample).            |
+| `python BioShiftPipeline.py --context healthy --mode graphviz_only`                                         | Runs **Graphviz only** on all samples (expects existing Table 3 per sample).                  |
+| `python BioShiftPipeline.py --context disease --mode prompt_co`                                             | Runs **Prompt\_Co only** on **all** observed CSVs.                                            |
+| `python BioShiftPipeline.py --context disease --mode full_no_graphviz --observed_dir "C:/path/to/observed"` | Same as above but reads observed CSVs from a **custom directory**.                            |
 
-
-Offers shifts_only, full_with_graphviz, full_no_graphviz, interpret_only and graphviz_only. You can apply "healthy" and "disease" contexts according to your need. 
 
 2. Observed Data – Single Sample (Specify single file in inputs/observed/) : Examples
-| Command                                                                                                   | What it does                                                                                                     |
-| --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `python BioShiftPipeline.py --context disease --mode shift_only --sample 10737_progressing`             | Runs **shift calculation only** for the specified observed CSV.                                                  |
-| `python BioShiftPipeline.py --context healthy --mode full_with_graphviz --sample 10737_stable`          | Runs **full pipeline** (Prompts A/B → Tables AB/1/2/3 → Prompt 3) **+ Graphviz** for the specified observed CSV. |
-| `python BioShiftPipeline.py --context disease --mode full_no_graphviz --sample 10737_progressing`       | Runs **full pipeline without Graphviz** for the specified observed CSV.                                          |
-| `python BioShiftPipeline.py --context healthy --mode interpret_only --sample 10737_stable`              | Runs **Prompt 3 only** using the sample’s generated Table 3.                                                     |
-| `python BioShiftPipeline.py --context disease --mode interpret_and_graphviz --sample 10737_progressing` | Runs **Prompt 3 + Graphviz** using the sample’s generated Table 3.                                               |
-| `python BioShiftPipeline.py --context healthy --mode graphviz_only --sample 10737_stable`               | Runs **Graphviz only** using the sample’s generated Table 3.                                                     |
+| Command                                                                                                 | What it does                                                                                                         |
+| ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `python BioShiftPipeline.py --context disease --mode shift_only --sample 10737_progressing`             | Runs **shift calculation only** for the specified observed CSV.                                                      |
+| `python BioShiftPipeline.py --context healthy --mode full_with_graphviz --sample 10737_stable`          | Runs **full pipeline** (A/B → Tables AB/1/2/3 → 3/INT **→ Co**) **+ Graphviz** for the specified observed CSV.       |
+| `python BioShiftPipeline.py --context disease --mode full_no_graphviz --sample 10737_progressing`       | Runs **full pipeline** (A/B → Tables AB/1/2/3 → 3/INT **→ Co**) **without Graphviz** for the specified observed CSV. |
+| `python BioShiftPipeline.py --context healthy --mode interpret_only --sample 10737_stable`              | Runs **Prompt 3 only** using the sample’s generated Table 3.                                                         |
+| `python BioShiftPipeline.py --context disease --mode interpret_and_graphviz --sample 10737_progressing` | Runs **Prompt 3 + Graphviz** using the sample’s generated Table 3.                                                   |
+| `python BioShiftPipeline.py --context healthy --mode graphviz_only --sample 10737_stable`               | Runs **Graphviz only** using the sample’s generated Table 3.                                                         |
+| `python BioShiftPipeline.py --context disease --mode prompt_co --sample 10737_progressing`              | Runs **Prompt\_Co only** for the specified observed CSV, saving to **Prompt\_Co\_Output**.                           |
 
-Offers shifts_only, full_with_graphviz, full_no_graphviz, interpret_only and graphviz_only. You can apply "healthy" and "disease" contexts according to your need. 
+
 
 3. Table 3 Direct (Operate directly on a Table 3 CSV files; no Observed CSV required) – Bulk (All files in inputs/table3/)
-   | Command                                                                                        | What it does                                                               |
-| ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Command                                                                                      | What it does                                                               |
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | `python BioShiftPipeline.py --context disease --mode table3_direct --run interpret`          | Scans `inputs/table3/*.csv`; runs **Interpretation only** for all.         |
 | `python BioShiftPipeline.py --context healthy --mode table3_direct --run graphviz`           | Scans `inputs/table3/*.csv`; runs **Graphviz only** for all.               |
 | `python BioShiftPipeline.py --context disease --mode table3_direct --run interpret_graphviz` | Scans `inputs/table3/*.csv`; runs **Interpretation + Graphviz** for all.   |
@@ -147,12 +146,13 @@ Offers shifts_only, full_with_graphviz, full_no_graphviz, interpret_only and gra
 | `python BioShiftPipeline.py --context disease --mode table3_batch --run graphviz`            | Explicit batch runner: **Graphviz only** for all Table 3 CSVs.             |
 | `python BioShiftPipeline.py --context healthy --mode table3_batch --run interpret_graphviz`  | Explicit batch runner: **Interpretation + Graphviz** for all Table 3 CSVs. |
 
+
 Offers interpret_only and graphviz_only or interpret_graphviz. You can apply "healthy" and "disease" contexts according to your need. 
 
 4. Table 3 Direct – Single File 
 
-| Command                                                                                                                                         | What it does                                                   |
-| ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Command                                                                                                                                       | What it does                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
 | `python BioShiftPipeline.py --context disease --mode table3_direct --table3 "inputs/table3/10737_stable_table3.csv" --run interpret`          | **Interpretation only** (Prompt 3) for the given Table 3 file. |
 | `python BioShiftPipeline.py --context healthy --mode table3_direct --table3 "inputs/table3/10737_stable_table3.csv" --run graphviz`           | **Graphviz only** for the given Table 3 file.                  |
 | `python BioShiftPipeline.py --context disease --mode table3_direct --table3 "inputs/table3/10737_stable_table3.csv" --run interpret_graphviz` | **Interpretation + Graphviz** for the given Table 3 file.      |
@@ -162,61 +162,53 @@ Offers interpret_only and graphviz_only or interpret_graphviz. You can apply "he
 
 
 ### Both contexts running example (back-to-back):
-python BioShiftPipeline.py --context disease --mode full_with_graphviz  && python BioShiftPipeline.py --context healthy --mode full_with_graphviz 
+python BioShiftPipeline.py --context disease --mode full_with_graphviz  && \
+python BioShiftPipeline.py --context healthy --mode full_with_graphviz
+
 
 ## Output folder
  This is example of how outputs folders appear
 project-root/
 inputs/
-├─ observed/                               # Full run, shifts-only, shift+interpretation, interpretation-only, or Graphviz-only
-│  ├─ MySample123.csv                      # → outputs/disease/MySample123/
-│  ├─ MySample124.csv                      # → outputs/disease/MySample124/
-│  ├─ ProjectX_Patient01.csv               # → outputs/disease/ProjectX_Patient01/
-│  └─ ...                                  # Add as many *.csv files as needed
-│
+project-root/
+inputs/
+├─ observed/
+│  ├─ MySample123.csv
+│  ├─ MySample124.csv
+│  └─ ProjectX_Patient01.csv
 ├─ graphviz/
 │  ├─ Graphviz1.txt
-│  └─ Graphviz2.txt
-│  └─ .......                             # Add as many *txt or .dot Graphviz files as needed
-│
-└─ Table3/                                 # Use when Table 3 is your starting input
-│  ├─ Sample3_Table3.csv                   # Add as many *.csv files as needed
-│   └─ ...
-│
+│  └─ Graphviz2.dot
+└─ table3/
+   ├─ Sample3_Table3.csv
+   └─ ...
+
 **outputs/**
-└─ disease/                                # Windows path: E.g. C:\BioShift\outputs\Disease\
-   ├─ MySample123/                          # Named after MySample123.csv
+└─ Disease/                                 # or Healthy/
+   ├─ MySample123/
    │  ├─ prompts/
    │  │  ├─ PromptA_output.txt
    │  │  ├─ PromptB_output.txt
    │  │  └─ MySample123_Prompt3_output.txt
-   │  │
+   │  ├─ Prompt_Co_Output/
+   │  │  └─ MySample123_PromptCo_output.txt     # ← Fourth prompt output that use only observed shifts
    │  ├─ tables/
-   │  │  ├─ MySample123_TableAB.csv
-   │  │  ├─ MySample123_Table1.csv
-   │  │  ├─ MySample123_Table2.csv
-   │  │  └─ MySample123_Table3.csv
-   │  │
-   │  ├─ graphviz/
+   │  │  ├─ MySample123_tableAB.csv
+   │  │  ├─ MySample123_table1.csv
+   │  │  ├─ MySample123_table2.csv
+   │  │  └─ MySample123_table3.csv
+   │  ├─ graphviz/                               
    │  │  ├─ MySample123_Graphviz1_highlighted.jpg
    │  │  └─ MySample123_Graphviz2_highlighted.jpg
-   │  │
    │  ├─ elements/
-   │  │  └─ MySample123.txt
-   │  │
-   │  └─ table3direct/                      # When Table 3 is directly used as input
-   │     └─ MySample_Table3/
+   │  │  └─ MySample123_Elements.txt
+   │  └─ table3direct/
+   │     └─ MySample123_table3/
    │        ├─ interpret/
-   │        │  └─ <interpretation_files_here>
-   │        │
    │        └─ graphviz/
-   │           └─ <graphviz_files_here>
-   │
-   ├─ MySample124/                          # Named after MySample124.csv
-   │  └─ ...
-   │
-   └─ ProjectX_Patient01/                   # Named after ProjectX_Patient01.csv
-      └─ ...
+   ├─ MySample124/
+   └─ ProjectX_Patient01/
+
 
 **Reference:**
 © https://github.com/SayakaMiura
