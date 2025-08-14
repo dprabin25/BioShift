@@ -125,7 +125,7 @@ We originally used OpenAI, but you can adjust the contents of these files to wor
 
 Offers shifts_only, full_with_graphviz, full_no_graphviz, interpret_only and graphviz_only. You can apply "healthy" and "disease" contexts according to your need. 
 
-2. Observed Data – Single Sample (Specify single file in inputs/observed/)
+2. Observed Data – Single Sample (Specify single file in inputs/observed/) : Examples
 | Command                                                                                                   | What it does                                                                                                     |
 | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | `python BioShiftPipeline.py --context disease --mode shift_only --sample 10737_progressing`             | Runs **shift calculation only** for the specified observed CSV.                                                  |
