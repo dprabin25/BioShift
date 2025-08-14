@@ -1,0 +1,18 @@
+Here's the summary table based on the analysis of the provided elements in relation to gum disease:
+
+| Element                     | GPT shift 1 |
+|-----------------------------|--------------|
+| IL-1B                       | 1            |
+| IL-6                        | 1            |
+| MNPs                        | 1            |
+| APCs                        | 1            |
+| Th17                        | 1            |
+| Porphyromonas gingivalis    | 1            |
+| Treponema denticola         | 1            |
+| Tannerella forsythia        | 1            |
+| IL-10                       | -1           |
+| IL-4                        | -1           |
+| MIP-1D                     | 0            |
+| MCP-1                      | 1            |
+
+This table reflects the established associations of the listed elements with gum disease, indicating whether their levels are reported to increase, decrease, show mixed patterns, or remain unclear in the context of periodontitis.

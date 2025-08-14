@@ -1,0 +1,16 @@
+Based on the associations of the listed elements with healthy gum status, the following summary table has been created:
+
+| Element                       | GPT shift 1 |
+|-------------------------------|--------------|
+| IL-1B                         | -1           |
+| IL-6                          | -1           |
+| IL-10                         | 1            |
+| IL-4                          | 1            |
+| Th17                          | -1           |
+| Porphyromonas gingivalis     | -1           |
+| Treponema denticola          | -1           |
+| Tannerella forsythia         | -1           |
+| MIP-1D                       | 0            |
+| MCP-1                        | 0            |
+
+Note: The entries for MIP-1D and MCP-1 indicate mixed or unclear associations, hence are marked as 0.

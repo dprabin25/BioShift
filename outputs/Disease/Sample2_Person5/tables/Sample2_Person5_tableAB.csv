@@ -1,0 +1,13 @@
+Element,GPT shift 1,GPT shift 2,Biological Group,Group ID based on Biological Group,Notes (if any)
+APCs,1,1,Immune Cells,6,Associated with increased activity in gum disease.
+IL-10,-1,-1,Anti-inflammatory Cytokines,2,Typically decreases in active disease.
+IL-1B,1,1,Pro-inflammatory Cytokines,1,Commonly elevated in periodontitis.
+IL-4,-1,,,,
+IL-6,1,1,Pro-inflammatory Cytokines,1,Often reported to increase.
+MCP-1,1,1,Chemokines,5,Often increases in inflammatory conditions.
+MIP-1D,0,1,Chemokines,5,Typically elevated during inflammation.
+MNPs,1,1,Immune Cells,6,Generally elevated in response to infection.
+Porphyromonas gingivalis,1,1,Periodontal Pathogens,4,Key pathogen in periodontitis.
+Tannerella forsythia,1,1,Periodontal Pathogens,4,Frequently co-occurs with other periodontal pathogens.
+Th17,1,1,T-helper Cell Subtypes,3,Associated with increased inflammation.
+Treponema denticola,1,1,Periodontal Pathogens,4,Often found in conjunction with P. gingivalis.

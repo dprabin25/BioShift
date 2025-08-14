@@ -1,0 +1,9 @@
+Element,Observed Shift,Expected Shift,Biological Group
+APCs,-1,,
+MNPs,1,,
+Porphyromonas gingivalis,1,1,Pathogenic bacteria
+Tannerella forsythia,1,1,Pathogenic bacteria
+Treponema denticola,1,1,Pathogenic bacteria
+IL-1B,1,1,Pro-inflammatory cytokines
+IL-6,1,1,Pro-inflammatory cytokines
+Th17,-1,1,T-helper cell subtypes

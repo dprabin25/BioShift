@@ -1,0 +1,9 @@
+Element,GPT shift 1,GPT shift 2,Biological Group,Group ID based on Biological Group,Notes (if any)
+APCs,1,1,Immune Cell Activation,2,Increase correlates with inflammatory response.
+IL-1B,1,1,Pro-inflammatory Cytokines,1,Commonly elevated in periodontitis.
+IL-6,1,1,Pro-inflammatory Cytokines,1,Frequently reported alongside IL-1B in gum disease.
+MNPs,1,1,Immune Cell Activation,2,Increased in response to periodontal pathogens.
+Porphyromonas gingivalis,1,1,Pathogenic Microorganisms,4,Known to increase in periodontal disease.
+Tannerella forsythia,1,1,Pathogenic Microorganisms,4,Increased levels in periodontal disease correlate with other pathogens.
+Th17,1,1,T-helper Cell Response,3,Associated with elevated levels of IL-1B and IL-6.
+Treponema denticola,1,1,Pathogenic Microorganisms,4,Often found in conjunction with Porphyromonas gingivalis.

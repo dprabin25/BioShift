@@ -1,0 +1,14 @@
+Based on the input elements and the established literature regarding their joint shifts in gum disease, I have compiled the following summary table. This table includes groups or pairs of elements that are commonly reported to shift together, along with their respective directions of change.
+
+| Element                        | GPT shift 2 | Biological Group               | Group ID based on Biological Group | Notes (if any)               |
+|-------------------------------|--------------|--------------------------------|------------------------------------|------------------------------|
+| IL-1B                         | 1            | Pro-inflammatory Cytokines     | 1                                  | Commonly elevated in periodontitis. |
+| IL-6                          | 1            | Pro-inflammatory Cytokines     | 1                                  | Frequently reported alongside IL-1B in gum disease. |
+| MNPs                          | 1            | Immune Cell Activation         | 2                                  | Increased in response to periodontal pathogens. |
+| APCs                          | 1            | Immune Cell Activation         | 2                                  | Increase correlates with inflammatory response. |
+| Th17                          | 1            | T-helper Cell Response         | 3                                  | Associated with elevated levels of IL-1B and IL-6. |
+| Porphyromonas gingivalis     | 1            | Pathogenic Microorganisms      | 4                                  | Known to increase in periodontal disease. |
+| Treponema denticola          | 1            | Pathogenic Microorganisms      | 4                                  | Often found in conjunction with Porphyromonas gingivalis. |
+| Tannerella forsythia         | 1            | Pathogenic Microorganisms      | 4                                  | Increased levels in periodontal disease correlate with other pathogens. |
+
+This table reflects the established evidence of joint shifts in the context of gum disease, highlighting the interactions between cytokines, immune cells, and microbial organisms.
