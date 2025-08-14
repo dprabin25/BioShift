@@ -17,6 +17,10 @@ We working with OpenAI Account and this way we can get API key:
 5. Go to OpenAI API keys: https://platform.openai.com/api-keys
 6. Click “Create new secret key” → Copy the key (it looks like sk-...).
    ⚠ Important: Treat this key like a password — never share it or commit it to public code repositories.
+
+## Editing API_key and default AI model
+
+You can edit API_key.txt to add your own API key. You can also edit the .json file to change the default mode or switch the AI model. We originally used OpenAI, but you can adjust the contents of these files to work with any AI tool you choose.
    
 ## Working directory with essential folders and files
 Your working directory should contain BioShiftBioShiftPipeline.py 
@@ -24,6 +28,7 @@ In your working directory, you can have input folders
 	1. Folder name "observed" containing csv files with Elements and Observed Shifts 
 	2. Folder name "graphviz" containing .dot files 
 	3. Table 3 if you want to get Prompt 3 output or Graphviz jpg figure
+    4. "config" folder that contains API key in text and gpt options in .json format
 
 
 
@@ -33,10 +38,10 @@ project-root/
 ├── inputs/
 │   ├── observed/             # Your input CSVs with elements & observed shifts
 │   ├── graphviz/             # Input Graphviz .dot files (for highlighting)
-│   └── Table 3/              # Input Table 3 (According to need) CSVs (for interpretation/highlighting)
-
-
-
+│   ├──  Table 3/             # Input Table 3 (According to need) CSVs (for interpretation/highlighting)
+├── config/
+│   ├── API_key.txt 
+│   ├── gpt_options.json 
 
 
 Note:
@@ -54,6 +59,8 @@ If you're Windows user and having issue:
 
 
 
+## FOR RUNNING BishiftPipeline.py
+
 ### Set the API Key in Your Terminal for the current session.
 1. For Windows 
    setx OPENAI_API_KEY "your_api_key_here"
@@ -65,16 +72,7 @@ If you're Windows user and having issue:
 ## Apperance of working directory
 This is what your initial working directory looks like 
 
-project-root/
-│
-├── BioShiftPipeline.py
-├── inputs/
-│   ├── observed/   # Place your observed CSV files here    
-│   └── graphviz/   # Place your Graphviz .dot or .txt files here for network highlighting / Shiftmapper
-│   └── Table 3/      # Place your Table 3 csv containing cols "Element", "Observed Shift", "Expected Shift" and "Biological Group"
 
-
-## Running BioShift and choosing OpenAI model
 Running the BioShiftPipeline You can run the BioShiftPipeline in various modes depending on your needs: Command Structure All commands run from your working directory (where BioShiftBioShiftPipeline.py is located). 
 
 Use Command Terminal.
