@@ -161,37 +161,8 @@ Offers interpret_only and graphviz_only or interpret_graphviz. You can apply "he
 Offers interpret_only and graphviz_only or interpret_graphviz. You can apply "healthy" and "disease" contexts according to your need. 
 
 
-
-
-
-### Both contexts (back-to-back):
+### Both contexts running example (back-to-back):
 python BioShiftPipeline.py --context disease --mode full_with_graphviz  && python BioShiftPipeline.py --context healthy --mode full_with_graphviz 
-
-
-### Other Modes
-| Mode                                 | Command Example                                                                                                           | Description                                             |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| **shift\_only** (Prompt A/B, Tables) | `python BioShiftPipeline.py --context disease --mode shift_only --model gpt-4o-mini`                                      | Only runs observed shift analysis (Prompt A/B + tables) |
-| **full\_no\_graphviz**               | `python BioShiftPipeline.py --context disease --mode full_no_graphviz --model gpt-4o-mini`                                | Full BioShiftPipeline without Graphviz rendering        |
-| **interpret\_only** (Prompt 3 only)  | `python BioShiftPipeline.py --context disease --mode interpret_only --model gpt-4o-mini`                                  | Runs Prompt 3 interpretation on Table 3 only            |
-| **interpret\_and\_graphviz**         | `python BioShiftPipeline.py --context disease --mode interpret_and_graphviz --model gpt-4o-mini`                          | Runs Prompt 3 interpretation + Graphviz highlighting    |
-| **graphviz\_only**                   | `python BioShiftPipeline.py --context disease --mode graphviz_only --model gpt-4o-mini`                                   | Only highlights Table 3 in an existing Graphviz network |
-| **Run on single sample**             | `python BioShiftPipeline.py --context disease --mode full_no_graphviz --model gpt-4o-mini --sample MySample123`           | Runs pipeline on a specific sample file                 |
-| **Use custom Table 3**               | `python BioShiftPipeline.py --context disease --mode interpret_only --model gpt-4o-mini --table3 "C:/path/to/Table3.csv"` | Uses your own Table 3 CSV file                          |
-
-**Note:** You can do the same for healthy context.
-
-**Special Notes**
-Direct Table 3 Use:
-When running with a custom Table 3, for example:
-
-python BioShiftPipeline.py --context disease --mode interpret_only --model gpt-4o-mini --sample MySample123 --table3 "C:/path/to/Table3.csv"
-							OR
-python3 BioShiftPipeline.py --context disease --mode graphviz_only --model gpt-4o-mini --sample MySample123 --table3 /path/to/Table3.csv
-
-The BioShiftPipeline will use your specified Table 3 for Prompt 3 and ShiftMapper. 
-
-
 
 ## Output folder
  This is example of how outputs folders appear
