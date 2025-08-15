@@ -1,0 +1,51 @@
+Based on the input list and the relevant literature regarding the associations of these elements with healthy gum status and recovery from gum disease, here is the summary table:
+
+| Element                                      | GPT shift 2 | Biological Group                       | Group ID based on Biological Group | Notes                  |
+|----------------------------------------------|--------------|---------------------------------------|------------------------------------|------------------------|
+| Actinomyces oris                             | 1            | Commensal Oral Microbes               | 1                                  | Associated with health  |
+| Aggregatibacter sp. oral taxon 458          | -1           | Pathogenic Oral Microbes              | 2                                  | Decreased in health     |
+| Campylobacter showae                         | -1           | Pathogenic Oral Microbes              | 2                                  | Decreased in health     |
+| Fusobacterium necrophorum                    | -1           | Pathogenic Oral Microbes              | 2                                  | Decreased in health     |
+| Prevotella sp. oral taxon 314                | -1           | Pathogenic Oral Microbes              | 2                                  | Decreased in health     |
+| Streptococcus sanguinis                      | 1            | Commensal Oral Microbes               | 1                                  | Associated with health  |
+| Streptococcus sobrinus                       | 1            | Commensal Oral Microbes               | 1                                  | Associated with health  |
+| Streptococcus sp. oral taxon 431             | 1            | Commensal Oral Microbes               | 1                                  | Associated with health  |
+| TM7 phylum sp. oral taxon 351                | 0            | Unknown/Uncharacterized Microbes      | 3                                  | Information unclear     |
+| Granzyme B                                   | 1            | Cytokines/Immune Mediators            | 4                                  | Associated with recovery |
+| SCF                                          | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| TRAIL                                        | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| ENA-78                                       | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| EGF                                          | 1            | Growth Factors                         | 5                                  | Associated with recovery |
+| Eotaxin                                      | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| Flt-3L                                       | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| GM-CSF                                       | 1            | Cytokines/Immune Mediators            | 4                                  | Associated with recovery |
+| IFN-A2                                       | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| IFN-Y                                        | 1            | Cytokines/Immune Mediators            | 4                                  | Associated with recovery |
+| GRO                                          | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| IL-10                                        | 1            | Anti-inflammatory Cytokines           | 6                                  | Associated with recovery |
+| MCP-3                                        | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| IL-12p40                                     | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| MDC                                          | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| IL-12p70                                     | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| IL-13                                        | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| IL-15                                        | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| IL-17A                                       | -1           | Pro-inflammatory Cytokines            | 7                                  | Decreased in health     |
+| IL-2                                         | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| IL-6                                         | -1           | Pro-inflammatory Cytokines            | 7                                  | Decreased in health     |
+| IL-7                                         | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| IL-8                                         | -1           | Pro-inflammatory Cytokines            | 7                                  | Decreased in health     |
+| IP-10                                        | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| MCP-1                                        | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| MIP-1A                                       | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| MIP-1B                                       | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| TNF-A                                        | -1           | Pro-inflammatory Cytokines            | 7                                  | Decreased in health     |
+| VEGF                                         | 1            | Growth Factors                         | 5                                  | Associated with recovery |
+| MMP-2                                        | -1           | Matrix Metalloproteinases             | 8                                  | Decreased in health     |
+| RANKL                                        | -1           | Bone Resorption Factors                | 9                                  | Decreased in health     |
+| GDF-15                                       | 0            | Cytokines/Immune Mediators            | 4                                  | Information unclear     |
+| Periostin                                    | 1            | Extracellular Matrix Proteins         | 10                                 | Associated with recovery |
+| LEC                                          | 0            | Unknown/Uncharacterized Factors        | 3                                  | Information unclear     |
+| Monocyte                                     | 0            | Immune Cell Types                     | 11                                 | Information unclear     |
+| Th17                                         | -1           | Pro-inflammatory Immune Cells         | 12                                 | Decreased in health     |
+
+This table summarizes the identified associations between the elements listed and their respective shifts in healthy gum status or recovery from gum disease, based on current scientific understanding.
