@@ -1,0 +1,19 @@
+# System Requirements
+
+This project calls Graphviz's `dot` via subprocess. Install the **Graphviz binary**:
+
+- **Windows**
+  - `winget install Graphviz.Graphviz`  
+    *(or `choco install graphviz`)*
+- **macOS**
+  - `brew install graphviz`
+- **Ubuntu/Debian**
+  - `sudo apt-get install graphviz`
+- **Fedora/RHEL/CentOS**
+  - `sudo dnf install graphviz`
+- **Conda (any OS)**
+  - `conda install -c conda-forge graphviz`
+
+Verify it’s on PATH:
+```bash
+dot -V
