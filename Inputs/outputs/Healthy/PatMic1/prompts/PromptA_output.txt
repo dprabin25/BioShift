@@ -1,0 +1,24 @@
+Based on the input list provided, here is the summary table of findings regarding associations with healthy gum status:
+
+| Item | Direction of Change |
+|------|---------------------|
+| Actinomyces oris | 1 |
+| Streptococcus sanguinis | 1 |
+| IL-10 | 1 |
+| IL-6 | -1 |
+| IL-17A | -1 |
+| TNF-A | -1 |
+| Granzyme B | 0 |
+| Th17 | 0 |
+
+### Explanation of Findings:
+- **Actinomyces oris**: Generally associated with healthy periodontal status, often found in higher abundance in healthy gums.
+- **Streptococcus sanguinis**: Known to be a beneficial commensal organism, associated with healthy gum status.
+- **IL-10**: An anti-inflammatory cytokine, typically increases in healthy gums.
+- **IL-6**: Often reported to decrease in healthy gum status, as it is associated with inflammation.
+- **IL-17A**: Generally associated with inflammation and tends to decrease in healthy gum status.
+- **TNF-A**: A pro-inflammatory cytokine that is typically decreased in healthy gums.
+- **Granzyme B**: Its role is not clearly defined, with mixed findings in relation to gum health.
+- **Th17**: The relationship is ambiguous, with studies showing varied results regarding its role in periodontal health.
+
+Note: The direction of change for some items is categorized as 0 (unknown) due to mixed or unclear evidence in the literature.

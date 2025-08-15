@@ -1,0 +1,10 @@
+Element,Direction,GPT shift 2,Biological Group,Group ID based on Biological Group,Notes (if any),Observed Shift
+Antigen-presenting cells,1,1,Immune response and inflammation,2,Increased during immune activation,-1
+IL-1B,-1,1,Pro-inflammatory cytokines,1,Associated with inflammation,1
+IL-6,-1,1,Pro-inflammatory cytokines,1,Associated with inflammation,1
+Mononuclear phagocytes,1,1,Immune response and inflammation,2,Increased during inflammation,1
+Porphyromonas gingivalis,-1,-1,Pathogenic bacteria,4,Decrease indicates recovery,1
+TNF,-1,1,Pro-inflammatory cytokines,1,Associated with inflammation,-1
+Tannerella forsythia,-1,-1,Pathogenic bacteria,4,Decrease indicates recovery,1
+Th17,0,1,T-helper cell subsets,3,Associated with inflammation,-1
+Treponema denticola,-1,-1,Pathogenic bacteria,4,Decrease indicates recovery,0

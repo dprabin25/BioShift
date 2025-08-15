@@ -1,0 +1,33 @@
+Element,Observed Shift,Expected Shift,Biological Group
+IL-2,-1,,
+sCD40L,-1,,
+TRAP5,-1,0,Bone Metabolism Markers
+OPG,-1,1,Bone Resorption Factors
+RANKL,-1,-1,Bone Resorption Factors
+ENA-78,1,0,Chemokines
+Eotaxin,-1,0,Chemokines
+MCP-3,-1,1,Chemokines
+MCP-4,-1,X,Chemokines
+MIP-1B,1,1,Chemokines
+MIP-1D,-1,X,Chemokines
+RANTES,-1,1,Chemokines
+SDF-1A,-1,1,Chemokines
+SDF-1B,-1,1,Chemokines
+IL-16,-1,X,Cytokines
+IL-28A,-1,X,Cytokines
+LIF,-1,X,Cytokines
+HSP70,-1,0,Heat Shock Proteins
+HSP70,-1,X,Heat Shock Proteins
+MMP-1,-1,0,Matrix Metalloproteinases
+MMP-8,-1,-1,Matrix Metalloproteinases
+IL-12p40,-1,-1,Pro-inflammatory Cytokines
+IL-12p70,-1,-1,Pro-inflammatory Cytokines
+IL-17A,-1,-1,Pro-inflammatory Cytokines
+IL-1A,-1,-1,Pro-inflammatory Cytokines
+IL-1B,-1,-1,Pro-inflammatory Cytokines
+GDF-15,-1,0,Stress Response Factors
+YKL-40,-1,0,Stress Response Factors
+IFN-Y,-1,-1,T-cell Activation Cytokines
+IL-15,-1,1,T-cell Activation Cytokines
+IL-21,-1,1,T-cell Activation Cytokines
+IL-23,-1,-1,T-cell Activation Cytokines

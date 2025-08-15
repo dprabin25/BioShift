@@ -1,0 +1,46 @@
+Element,Item,Direction of Change,GPT shift 2,Biological Group,Group ID based on Biological Group,Notes,Observed Shift
+Actinomyces oris,,,1,Commensal Oral Microbes,1,Associated with health,1
+Aggregatibacter sp. oral taxon 458,,,-1,Pathogenic Oral Microbes,2,Decreased in health,1
+Campylobacter showae,,,-1,Pathogenic Oral Microbes,2,Decreased in health,1
+EGF,,,1,Growth Factors,5,Associated with recovery,-1
+ENA-78,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+Eotaxin,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+Flt-3L,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+Fusobacterium necrophorum,,,-1,Pathogenic Oral Microbes,2,Decreased in health,1
+GDF-15,,,0,Cytokines/Immune Mediators,4,Information unclear,1
+GM-CSF,,,1,Cytokines/Immune Mediators,4,Associated with recovery,-1
+GRO,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+Granzyme B,,,1,Cytokines/Immune Mediators,4,Associated with recovery,1
+IFN-A2,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+IFN-Y,,,1,Cytokines/Immune Mediators,4,Associated with recovery,-1
+IL-10,,,1,Anti-inflammatory Cytokines,6,Associated with recovery,-1
+IL-12p40,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+IL-12p70,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+IL-13,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+IL-15,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+IL-17A,,,-1,Pro-inflammatory Cytokines,7,Decreased in health,-1
+IL-2,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+IL-6,,,-1,Pro-inflammatory Cytokines,7,Decreased in health,-1
+IL-7,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+IL-8,,,-1,Pro-inflammatory Cytokines,7,Decreased in health,-1
+IP-10,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+LEC,,,0,Unknown/Uncharacterized Factors,3,Information unclear,1
+MCP-1,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+MCP-3,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+MDC,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+MIP-1A,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+MIP-1B,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+MMP-2,,,-1,Matrix Metalloproteinases,8,Decreased in health,1
+Monocyte,,,0,Immune Cell Types,11,Information unclear,1
+Periostin,,,1,Extracellular Matrix Proteins,10,Associated with recovery,1
+Prevotella sp. oral taxon 314,,,-1,Pathogenic Oral Microbes,2,Decreased in health,1
+RANKL,,,-1,Bone Resorption Factors,9,Decreased in health,-1
+SCF,,,0,Cytokines/Immune Mediators,4,Information unclear,1
+Streptococcus sanguinis,,,1,Commensal Oral Microbes,1,Associated with health,1
+Streptococcus sobrinus,,,1,Commensal Oral Microbes,1,Associated with health,1
+Streptococcus sp. oral taxon 431,,,1,Commensal Oral Microbes,1,Associated with health,1
+TM7 phylum sp. oral taxon 351,,,0,Unknown/Uncharacterized Microbes,3,Information unclear,1
+TNF-A,,,-1,Pro-inflammatory Cytokines,7,Decreased in health,-1
+TRAIL,,,0,Cytokines/Immune Mediators,4,Information unclear,-1
+Th17,,,-1,Pro-inflammatory Immune Cells,12,Decreased in health,1
+VEGF,,,1,Growth Factors,5,Associated with recovery,-1

@@ -1,0 +1,46 @@
+Element,Observed Shift,Expected Shift,Biological Group
+IL-10,-1,1,Anti-inflammatory Cytokines
+RANKL,-1,-1,Bone Resorption Factors
+Actinomyces oris,1,1,Commensal Oral Microbes
+Streptococcus sanguinis,1,1,Commensal Oral Microbes
+Streptococcus sobrinus,1,1,Commensal Oral Microbes
+Streptococcus sp. oral taxon 431,1,1,Commensal Oral Microbes
+ENA-78,-1,0,Cytokines/Immune Mediators
+Eotaxin,-1,0,Cytokines/Immune Mediators
+Flt-3L,-1,0,Cytokines/Immune Mediators
+GDF-15,1,0,Cytokines/Immune Mediators
+GM-CSF,-1,1,Cytokines/Immune Mediators
+GRO,-1,0,Cytokines/Immune Mediators
+Granzyme B,1,1,Cytokines/Immune Mediators
+IFN-A2,-1,0,Cytokines/Immune Mediators
+IFN-Y,-1,1,Cytokines/Immune Mediators
+IL-12p40,-1,0,Cytokines/Immune Mediators
+IL-12p70,-1,0,Cytokines/Immune Mediators
+IL-13,-1,0,Cytokines/Immune Mediators
+IL-15,-1,0,Cytokines/Immune Mediators
+IL-2,-1,0,Cytokines/Immune Mediators
+IL-7,-1,0,Cytokines/Immune Mediators
+IP-10,-1,0,Cytokines/Immune Mediators
+MCP-1,-1,0,Cytokines/Immune Mediators
+MCP-3,-1,0,Cytokines/Immune Mediators
+MDC,-1,0,Cytokines/Immune Mediators
+MIP-1A,-1,0,Cytokines/Immune Mediators
+MIP-1B,-1,0,Cytokines/Immune Mediators
+SCF,1,0,Cytokines/Immune Mediators
+TRAIL,-1,0,Cytokines/Immune Mediators
+Periostin,1,1,Extracellular Matrix Proteins
+EGF,-1,1,Growth Factors
+VEGF,-1,1,Growth Factors
+Monocyte,1,0,Immune Cell Types
+MMP-2,1,-1,Matrix Metalloproteinases
+Aggregatibacter sp. oral taxon 458,1,-1,Pathogenic Oral Microbes
+Campylobacter showae,1,-1,Pathogenic Oral Microbes
+Fusobacterium necrophorum,1,-1,Pathogenic Oral Microbes
+Prevotella sp. oral taxon 314,1,-1,Pathogenic Oral Microbes
+IL-17A,-1,-1,Pro-inflammatory Cytokines
+IL-6,-1,-1,Pro-inflammatory Cytokines
+IL-8,-1,-1,Pro-inflammatory Cytokines
+TNF-A,-1,-1,Pro-inflammatory Cytokines
+Th17,1,-1,Pro-inflammatory Immune Cells
+LEC,1,0,Unknown/Uncharacterized Factors
+TM7 phylum sp. oral taxon 351,1,0,Unknown/Uncharacterized Microbes

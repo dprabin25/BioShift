@@ -1,0 +1,33 @@
+Element,Association Direction,GPT shift 2,Biological Group,Group ID based on Biological Group,Notes (if any),Observed Shift
+ENA-78,1,0,Chemokines,4,Mixed evidence,1
+Eotaxin,1,0,Chemokines,4,Mixed evidence,-1
+GDF-15,1,0,Stress Response Factors,7,Mixed evidence,-1
+HSP70,1,0,Heat Shock Proteins,6,Mixed evidence,-1
+HSP70,1,X,Heat Shock Proteins,6,Information not available,-1
+IFN-Y,1,-1,T-cell Activation Cytokines,5,Decreases in healthy status,-1
+IL-12p40,1,-1,Pro-inflammatory Cytokines,1,Decreases in healthy status,-1
+IL-12p70,1,-1,Pro-inflammatory Cytokines,1,Decreases in healthy status,-1
+IL-15,1,1,T-cell Activation Cytokines,5,Increases in healthy status,-1
+IL-16,1,X,Cytokines,9,Information not available,-1
+IL-17A,-1,-1,Pro-inflammatory Cytokines,1,Decreases in healthy status,-1
+IL-1A,-1,-1,Pro-inflammatory Cytokines,1,Decreases in healthy status,-1
+IL-1B,-1,-1,Pro-inflammatory Cytokines,1,Decreases in healthy status,-1
+IL-2,1,,,,,-1
+IL-21,1,1,T-cell Activation Cytokines,5,Increases in healthy status,-1
+IL-23,1,-1,T-cell Activation Cytokines,5,Decreases in healthy status,-1
+IL-28A,1,X,Cytokines,9,Information not available,-1
+LIF,,X,Cytokines,9,Information not available,-1
+MCP-3,1,1,Chemokines,4,Increases in healthy status,-1
+MCP-4,1,X,Chemokines,4,Information not available,-1
+MIP-1B,1,1,Chemokines,4,Increases in healthy status,1
+MIP-1D,1,X,Chemokines,4,Information not available,-1
+MMP-1,-1,0,Matrix Metalloproteinases,2,Mixed evidence,-1
+MMP-8,-1,-1,Matrix Metalloproteinases,2,Decreases in healthy status,-1
+OPG,1,1,Bone Resorption Factors,3,Increases in healthy status,-1
+RANKL,-1,-1,Bone Resorption Factors,3,Decreases in healthy status,-1
+RANTES,1,1,Chemokines,4,Increases in healthy status,-1
+SDF-1A,1,1,Chemokines,4,Increases in healthy status,-1
+SDF-1B,1,1,Chemokines,4,Increases in healthy status,-1
+TRAP5,-1,0,Bone Metabolism Markers,8,Mixed evidence,-1
+YKL-40,1,0,Stress Response Factors,7,Mixed evidence,-1
+sCD40L,1,,,,,-1

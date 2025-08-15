@@ -1,0 +1,15 @@
+Based on the analysis of the provided elements, here is the summary table capturing the identified groups or pairs that are reported to shift jointly in healthy gum status or recovery from gum disease:
+
+| Element                      | GPT shift 2 | Biological Group                          | Group ID based on Biological Group | Notes (if any)                     |
+|------------------------------|--------------|------------------------------------------|------------------------------------|-------------------------------------|
+| IL-1B                        | 1            | Pro-inflammatory cytokines               | 1                                  | Associated with inflammation        |
+| IL-6                         | 1            | Pro-inflammatory cytokines               | 1                                  | Associated with inflammation        |
+| TNF                          | 1            | Pro-inflammatory cytokines               | 1                                  | Associated with inflammation        |
+| Mononuclear phagocytes       | 1            | Immune response and inflammation         | 2                                  | Increased during inflammation       |
+| Antigen-presenting cells     | 1            | Immune response and inflammation         | 2                                  | Increased during immune activation  |
+| Th17                         | 1            | T-helper cell subsets                    | 3                                  | Associated with inflammation        |
+| Porphyromonas gingivalis     | -1           | Pathogenic bacteria                      | 4                                  | Decrease indicates recovery         |
+| Treponema denticola         | -1           | Pathogenic bacteria                      | 4                                  | Decrease indicates recovery         |
+| Tannerella forsythia        | -1           | Pathogenic bacteria                      | 4                                  | Decrease indicates recovery         |
+
+This table reflects the joint shifts observed in the context of gum health and recovery from periodontitis, categorizing elements based on their biological functions and mechanistic roles.
