@@ -1,9 +1,0 @@
-Element,GPT shift 1,GPT shift 2,Biological Group,Group ID based on Biological Group,Notes (if any),Observed Shift
-APCs,1,,,,,-1
-IL-1B,-1,1,Pro-inflammatory cytokines,1,Commonly increases in disease and may decrease with recovery.,1
-IL-6,-1,1,Pro-inflammatory cytokines,1,Similar pattern as IL-1B.,1
-MNPs,1,,,,,1
-Porphyromonas gingivalis,-1,1,Pathogenic bacteria,3,Typically decreases with recovery; linked to disease progression.,1
-Tannerella forsythia,-1,1,Pathogenic bacteria,3,Follows the same trend as other periodontopathogens.,1
-Th17,0,1,T-helper cell subtypes,2,Associated with inflammation; may decrease with recovery.,-1
-Treponema denticola,-1,1,Pathogenic bacteria,3,"Similar to P. gingivalis, decreases with recovery.",1
