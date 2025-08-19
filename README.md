@@ -34,7 +34,7 @@ BioShift produces biological interpretations to given observed shifts of biologi
  > Alternatively, you can install it through conda. Run the following:
  >> conda install anaconda::graphviz 
  
-#### Troublbleshooting for Windows Users
+#### Troubleshooting for Windows Users
  > If you're Windows user and having issue:
  >>	1. Manually graphviz-13.1.1 (64-bit) ZIP archive [sha256] from https://graphviz.org/download/ [This is what we used for this BioShifts]
  >>	2. Extract the zip file and save it in a specific directory. [For e.g. C:/Graphviz] 
