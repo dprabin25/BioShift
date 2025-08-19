@@ -12,9 +12,11 @@ BioShift produces biological interpretations to given observed shifts of biologi
  
  > Note: If the installation of these python packages is not easy, you may want to use Anaconda for Python 3 (https://www.anaconda.com/distribution/). 
  > 
- > Or you can try python3 -m pip install [package name].
+ > Or you can try python3 -m pip install python -m pip install "openai" "pandas" "numpy".
  >
  > Alternatively, you can install them by [explain how to install requirements through terminal]
+>>python3 -m pip install -r requirements.txt
+
 
 ### 2. API key
  > 1. Create an OpenAI account. https://platform.openai.com/
