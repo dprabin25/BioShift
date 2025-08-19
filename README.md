@@ -79,7 +79,7 @@ Please list biological element with shift direction. Increased shifts should be 
 |Element | Observed Shift|
 |----------|------|
 |IL-1B | 1|
-|Mononuclear phagocytes | -1|
+|Mononuclear phagocytes |-1|
 |Th17 | 1|
 
 ### 2. Config file
