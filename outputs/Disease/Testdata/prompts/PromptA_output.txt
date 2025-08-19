@@ -1,0 +1,13 @@
+Here's the summary table based on the associations of the listed elements with gum disease:
+
+| Element                     | GPT shift 1 |
+|-----------------------------|--------------|
+| IL-1B                       | 1            |
+| IL-6                        | 1            |
+| MNPs                        | 1            |
+| APCs                        | 1            |
+| Th17                        | 1            |
+| Porphyromonas gingivalis    | 1            |
+| Treponema denticola        | 1            |
+| Tannerella forsythia       | 1            |
+| IL-1A                       | 1            |

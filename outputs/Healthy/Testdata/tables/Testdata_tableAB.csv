@@ -1,0 +1,10 @@
+Element,GPT shift 1,GPT shift 2,Biological Group,Group ID based on Biological Group,Notes (if any)
+APCs,1,1,Immune Cell Activation,2,Increase associated with recovery
+IL-1A,0,-1,Pro-inflammatory Cytokines,1,Typically decreases with recovery
+IL-1B,-1,-1,Pro-inflammatory Cytokines,1,Typically decreases with recovery
+IL-6,-1,-1,Pro-inflammatory Cytokines,1,Typically decreases with recovery
+MNPs,1,1,Immune Cell Activation,2,Increase associated with recovery
+Porphyromonas gingivalis,-1,-1,Pathogenic Microorganisms,4,Typically decreases with recovery
+Tannerella forsythia,-1,-1,Pathogenic Microorganisms,4,Typically decreases with recovery
+Th17,0,-1,T-helper Cell Subsets,3,Typically decreases with recovery
+Treponema denticola,-1,-1,Pathogenic Microorganisms,4,Typically decreases with recovery
