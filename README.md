@@ -64,7 +64,7 @@ dot -V
 
 #### Troubleshooting for Mac Users
 > For newer macOS : brew install graphviz
-> For older macOS : brew install graphviz
+> For older macOS : 
 >> 1. Install MacPorts
 Download the .pkg installer for your macOS version from MacPorts Downloads: https://www.macports.org/install.php. Follow the installer instructions.
 
