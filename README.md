@@ -166,7 +166,7 @@ When `table3_direct` or `table3_batch` is selected, assign "--run" which should 
 
 --------
 ### Reference
-[1] Prabin Dawadi, Josh Gililland, Mariel Pfeifer, Sayaka Miura, and Flavia Teles, BioShift: Prompt-Guided Workflow for Interpreting Immune–Microbiome Shifts. (2025) Under Review
+[1] Prabin Dawadi, Josh Gililland, Sayaka Miura, and Flavia Teles, BioShift: Prompt-Guided Workflow for Interpreting Immune–Microbiome Shifts. (2025) Under Review
 
 --------
 ### Copyright 2025, Authors and University of Mississippi
