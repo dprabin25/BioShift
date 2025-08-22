@@ -7,14 +7,22 @@ BioShift produces biological interpretations to given observed shifts of biologi
 ### 1. python 3 (Python 3.12.1 and 3.12.2 were tested)
  > python packages: 
  >> openai>=1.42.0,<2.0.0
- >> pandas>=2.2.2,<3.0.0  
+> > 
+ >> pandas>=2.2.2,<3.0.0
+> >   
  >> numpy>=1.26.4,<3.0.0
  
  > Note: If the installation of these python packages is not easy, you may want to use Anaconda for Python 3 (https://www.anaconda.com/distribution/). 
  > 
- > Or you can try python3 -m pip install python -m pip install "openai" "pandas" "numpy".
+ > Or you can try
+>
+> python3 -m pip install
+>
+> python -m
+>
+> pip install "openai" "pandas" "numpy".
  >
- > Alternatively, you can install them by [explain how to install requirements through terminal]
+ > Alternatively, you can install them by
 >>python3 -m pip install -r requirements.txt
 
 
