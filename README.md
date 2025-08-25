@@ -4,7 +4,20 @@
 BioShift produces biological interpretations to given observed shifts of biological elements. See Dawadi et al. (ref. 1) for the detail. It is written in Python. You are free to download, modify, and expand this code under a permissive license similar to the BSD 2-Clause License (see below).
 
 ## Dependencies
-### 1. python 3 (Python 3.12.1 and 3.12.2 were tested)
+### 
+1. Please install Anaconda: https://www.anaconda.com/distribution/
+####2. Open Anaconda terminal and then create conda environment for Bioshift. 
+
+Type the foloowing to create Conda Environment for BioShift
+
+conda create -n bioshift python=3.12 -y
+
+conda activate bioshift
+
+Note: We tested and 3.12.1 and 3.12.2 
+
+2. Python packages
+
  > python packages: 
  >> openai>=1.42.0,<2.0.0
 > > 
@@ -12,21 +25,13 @@ BioShift produces biological interpretations to given observed shifts of biologi
 > >   
  >> numpy>=1.26.4,<3.0.0
  
- > Note: If the installation of these python packages is not easy, you may want to use Anaconda for Python 3 (https://www.anaconda.com/distribution/). 
- > 
- > Or you can try
->
-> python3 -m pip install
->
-> python -m
->
-> pip install "openai" "pandas" "numpy".
- >
- > Alternatively, you can install them by
+
+ > You can try
+> 
 >>python3 -m pip install -r requirements.txt
 
 
-### 2. API key
+### 3. API key
  > 1. Create an OpenAI account. https://platform.openai.com/
  > 2. Once logged in, click your profile icon (top-right corner) → Manage Account → Billing.
  > 3. In the Billing section, set up Prepaid Billing or Auto Recharge
@@ -39,46 +44,10 @@ BioShift produces biological interpretations to given observed shifts of biologi
  > 6. Click “Create new secret key” → Copy the key (it looks like sk-...).
  >>  ⚠ Important: Treat this key like a password — never share it or commit it to public code repositories.
 
-### 3. Graphviz
- > You can download it from https://graphviz.org/download/. Please set a path.
- > Alternatively, you can install it through conda. Run the following:
+### 4. Graphviz
+ > You can install it through conda. Run the following:
  >> conda install anaconda::graphviz 
  
-#### Troublbleshooting for Windows Users
- > If you're Windows user and having issue:
- >>	1. Manually graphviz-13.1.1 (64-bit) ZIP archive [sha256] from https://graphviz.org/download/ [This is what we used for this BioShifts]
- >>	2. Extract the zip file and save it in a specific directory. [For e.g. C:/Graphviz] 
- >>	3. From Search go to "Edit the system environmental variables"
- >>	4. Click "Environmental variables"  
- >>	4. Click on "Path"
- >>	5. Add a "New" path where you Graphviz bin is located [For e.g.C:\Graphviz\Graphviz-13.1.1-win64\bin]
- >>	6. Apply the changes
-
-#### Troubleshooting for Linux Users
->> 1. Install Miniconda (No Sudo Required)
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/
-miniconda.sh
-bash ~/miniconda.sh -b -p $HOME/miniconda
-$HOME/miniconda/bin/conda init
-source ~/.bashrc
-
->> 2. Create Conda Environment for BioShift
-conda create -n bioshift python=3.12 -y
-conda activate bioshift
-
->> 3. Install Graphviz (Binary + Python) via Conda
-conda install -c conda-forge graphviz -y
-dot -V
-
-#### Troubleshooting for Mac Users
-> For newer macOS : brew install graphviz
-> For older macOS : 
->> 1. Install MacPorts
-Download the .pkg installer for your macOS version from MacPorts Downloads: https://www.macports.org/install.php. Follow the installer instructions.
-
->> 2. Update MacPorts and install Graphviz:
-sudo port selfupdate
-sudo port install graphviz
 
 ## How to prepare input files
 ### 1. Observed shift
