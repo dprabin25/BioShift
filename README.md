@@ -4,9 +4,9 @@
 BioShift produces biological interpretations to given observed shifts of biological elements. See Dawadi et al. (ref. 1) for the detail. It is written in Python. You are free to download, modify, and expand this code under a permissive license similar to the BSD 2-Clause License (see below).
 
 ## Dependencies
-### 
-1. Please install Anaconda: https://www.anaconda.com/distribution/
-####2. Open Anaconda terminal and then create conda environment for Bioshift. 
+
+### 1. Please install Anaconda: https://www.anaconda.com/distribution/
+### 2. Open Anaconda terminal and then create conda environment for Bioshift. 
 
 Type the foloowing to create Conda Environment for BioShift
 
