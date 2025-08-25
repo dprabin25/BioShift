@@ -5,8 +5,10 @@ BioShift produces biological interpretations to given observed shifts of biologi
 
 ## Dependencies
 
-### 1. Please install Anaconda: https://www.anaconda.com/distribution/
-### 2. Open Anaconda terminal and then create conda environment for Bioshift. 
+### 1. Anaconda
+Please install Anaconda: https://www.anaconda.com/distribution/
+
+Open Anaconda terminal and then create conda environment for Bioshift. 
 
 Type the foloowing to create Conda Environment for BioShift
 
@@ -16,7 +18,7 @@ conda activate bioshift
 
 Note: We tested and 3.12.1 and 3.12.2 
 
-2. Python packages
+### 2. Python packages
 
  python packages: 
  
@@ -33,17 +35,23 @@ python3 -m pip install -r requirements.txt
 
 
 ### 3. API key
- > 1. Create an OpenAI account. https://platform.openai.com/
- > 2. Once logged in, click your profile icon (top-right corner) → Manage Account → Billing.
- > 3. In the Billing section, set up Prepaid Billing or Auto Recharge
- >>  Prepaid: Manually add credit (e.g., $5, $10).
- >>  Auto Recharge: Automatically top up when balance is low.
- > 4. Check Your Usage
- >>  Open Usage from the left-hand menu to monitor your monthly spend and remaining balance
- >>  Link for pricing: https://openai.com/api/pricing/
- > 5. Go to OpenAI API keys: https://platform.openai.com/api-keys
- > 6. Click “Create new secret key” → Copy the key (it looks like sk-...).
- >>  ⚠ Important: Treat this key like a password — never share it or commit it to public code repositories.
+1. Create an OpenAI account. https://platform.openai.com/
+   
+2. Once logged in, click your profile icon (top-right corner) → Manage Account → Billing.
+   
+2. In the Billing section, set up Prepaid Billing or Auto Recharge
+   Prepaid: Manually add credit (e.g., $5, $10).
+   Auto Recharge: Automatically top up when balance is low.
+   
+ 3. Check Your Usage
+   Open Usage from the left-hand menu to monitor your monthly spend and remaining balance
+   Link for pricing: https://openai.com/api/pricing/
+
+ 4. Go to OpenAI API keys: https://platform.openai.com/api-keys
+
+ 5. Click “Create new secret key” → Copy the key (it looks like sk-...).
+    
+  ⚠ Important: Treat this key like a password — never share it or commit it to public code repositories.
 
 ### 4. Graphviz
  > You can install it through conda. Run the following:
