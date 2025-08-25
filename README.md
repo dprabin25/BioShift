@@ -12,9 +12,8 @@ Open Anaconda terminal and then create conda environment for Bioshift.
 
 Type the foloowing to create Conda Environment for BioShift
 
-`conda create -n bioshift python=3.12 -y'
-
-`conda activate bioshift'
+conda create -n bioshift python=3.12 -y 
+conda activate bioshift
 
 Note: We tested and 3.12.1 and 3.12.2 
 
