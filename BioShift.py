@@ -186,7 +186,12 @@ Always use numbers in real output if increase = 1, decrease = -1, Others = 0, In
 USE SAME NAME OF INPUT ELEMENTS FOR WHOLE PART.
 """
 
-PROMPT_D3 = """These are groups of jointly shifted microbiomes, immune cells, and/or proteins observed in gum disease that you are interested in. What is the biological interpretation? If well-established pathways of immune–microbiome interaction or immune regulation are involved, describe them and integrate them into the interpretation. Be sure to consider the direction of the shifts.
+PROMPT_D3 = """AI Role:
+You are a professor with the highest academic standards, possessing expert knowledge in immunology, microbiology, and the pathophysiology of periodontitis.
+
+Analysis and Reporting Instructions:
+
+These are groups of jointly shifted microbiomes, immune cells, and/or proteins observed in gum disease that you are interested in. What is the biological interpretation? If well-established pathways of immune–microbiome interaction or immune regulation are involved, describe them and integrate them into the interpretation. Be sure to consider the direction of the shifts.
 
 {table3}
 
@@ -233,7 +238,11 @@ Always use numbers in real output if increase = 1, decrease = -1, Others = 0, In
 USE SAME NAME OF INPUT ELEMENTS FOR WHOLE PART.
 """
 
-PROMPT_H3 = """These are lists of groups of jointly shifted microbiomes, cells, and/or proteins in recovery / healthy gum that you are interested in ((1 represents increase and -1 represents decrease). What is the biological interpretation? If well-established pathways of immune–microbiome interaction or immune pathways are involved, describe them and integrate them into the interpretation. Be aware of the direction of shifts.
+PROMPT_H3 = """AI Role:
+You are a professor with the highest academic standards, possessing expert knowledge in immunology, microbiology, and the pathophysiology of periodontitis.
+
+Analysis and Reporting Instructions:
+These are lists of groups of jointly shifted microbiomes, cells, and/or proteins in recovery / healthy gum that you are interested in ((1 represents increase and -1 represents decrease). What is the biological interpretation? If well-established pathways of immune–microbiome interaction or immune pathways are involved, describe them and integrate them into the interpretation. Be aware of the direction of shifts.
 
 {table3}
 
@@ -799,3 +808,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
