@@ -18,17 +18,18 @@ Note: We tested and 3.12.1 and 3.12.2
 
 2. Python packages
 
- > python packages: 
- >> openai>=1.42.0,<2.0.0
-> > 
- >> pandas>=2.2.2,<3.0.0
-> >   
- >> numpy>=1.26.4,<3.0.0
+ python packages: 
+ 
+ openai>=1.42.0,<2.0.0
+
+pandas>=2.2.2,<3.0.0
+  
+ numpy>=1.26.4,<3.0.0
  
 
- > You can try
-> 
->>python3 -m pip install -r requirements.txt
+You can try
+
+python3 -m pip install -r requirements.txt
 
 
 ### 3. API key
