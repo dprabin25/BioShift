@@ -12,8 +12,10 @@ Open Anaconda terminal and then create conda environment for Bioshift.
 
 Type the foloowing to create Conda Environment for BioShift
 
-conda create -n bioshift python=3.12 -y 
-conda activate bioshift
+`conda create -n bioshift python=3.12 -y `
+
+`conda activate bioshift`
+
 
 Note: We tested and 3.12.1 and 3.12.2 
 
@@ -55,7 +57,7 @@ You can try
 ### 4. Graphviz
  You can install it through conda. Run the following:
  
- `conda install anaconda::graphviz' 
+ `conda install anaconda::graphviz` 
  
 
 ## How to prepare input files
@@ -91,7 +93,6 @@ When you have groups of co-shifted elements, please list element, shift directio
 |IL-6|1|1|Pro-inflammatory Cytokines|
 
 ## How to use
-
 
 To perform the analysis, please assign "context" (healthy or disease) and mode (see options for the mode for the detail). It will analyze all input files in the input folder.    
 
@@ -135,8 +136,9 @@ A folder will be created for each input file within the "outputs" folder will be
 |`table3_direct`|**Prompt C**|**Table 3 Direct (CSV)** (`inputs/table3/*.csv` or `--table3 PATH`)|
 |`table3_batch` |**Prompt C**|**Table 3 Direct (CSV)** (`inputs/table3/*.csv` or `--table3 PATH`)|
 
->> table3_direct — Runs on a single Table 3 CSV passed via --table3; if omitted, it processes all files in inputs/table3/ (batch-like).
->> table3_batch — Processes every *.csv in inputs/table3/
+table3_direct — Runs on a single Table 3 CSV passed via --table3; if omitted, it processes all files in inputs/table3/ (batch-like).
+
+table3_batch — Processes every *.csv in inputs/table3/
 
 When `table3_direct` or `table3_batch` is selected, assign "--run" which should be interpret (only biological interpretation), graphviz (only pathway mapping), or interpret_graphviz (both of them).
 
