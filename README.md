@@ -12,9 +12,9 @@ Open Anaconda terminal and then create conda environment for Bioshift.
 
 Type the foloowing to create Conda Environment for BioShift
 
-conda create -n bioshift python=3.12 -y
+'conda create -n bioshift python=3.12 -y'
 
-conda activate bioshift
+'conda activate bioshift'
 
 Note: We tested and 3.12.1 and 3.12.2 
 
@@ -22,16 +22,16 @@ Note: We tested and 3.12.1 and 3.12.2
 
  python packages: 
  
- openai>=1.42.0,<2.0.0
+ 'openai>=1.42.0,<2.0.0'
 
-pandas>=2.2.2,<3.0.0
+'pandas>=2.2.2,<3.0.0'
   
- numpy>=1.26.4,<3.0.0
+ 'numpy>=1.26.4,<3.0.0'
  
 
 You can try
 
-python3 -m pip install -r requirements.txt
+'python3 -m pip install -r requirements.txt'
 
 
 ### 3. API key
@@ -54,8 +54,9 @@ python3 -m pip install -r requirements.txt
   ⚠ Important: Treat this key like a password — never share it or commit it to public code repositories.
 
 ### 4. Graphviz
- > You can install it through conda. Run the following:
- >> conda install anaconda::graphviz 
+ You can install it through conda. Run the following:
+ 
+ 'conda install anaconda::graphviz' 
  
 
 ## How to prepare input files
