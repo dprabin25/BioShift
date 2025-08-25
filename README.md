@@ -95,7 +95,7 @@ Please edit config.txt for the parameter settings. You can change "default_model
 
 We originally used OpenAI, but you can adjust the contents of these files to work with any AI tool you choose.
 
-|KEY=[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]
+|KEY=["WRITE YOUR KEY HERE"]
 |------------------------|
 |DEFAULT_MODEL=gpt-4o-mini|
 |TEMPERATURE=0.5|
