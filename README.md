@@ -58,7 +58,9 @@ You can try
  You can install it through conda. Run the following:
  
  `conda install anaconda::graphviz` 
- 
+
+ If graphviz is not installed from conda then you can install it from terminal:
+  `pip install graphviz` 
 
 ## How to prepare input files
 ### 1. Observed shift
