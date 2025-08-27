@@ -40,7 +40,7 @@ You can try
 
    https://platform.openai.com/
 
-(NOTE: For new users Sign up, create an account, generate an API key by providing an API Key Name and a Project Name when prompted. Copy the generated key and store it in a safe, secure location — you’ll need it to access the API.)
+(NOTE: For new users: Sign up, create an account, generate an API key by providing an API Key Name and a Project Name when prompted. Copy the generated key and store it in a safe, secure location — you’ll need it to access the API.)
 
 3. Once logged in, click your profile icon (top-right corner) → Manage Account → Billing.
    
