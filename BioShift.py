@@ -195,7 +195,7 @@ These are groups of jointly shifted microbiomes, immune cells, and/or proteins o
 
 {table3}
 
-Provide your analysis in a clear, structured format.
+Provide your analysis in a clear, structured format for the jointed shifts.
 
 USE SAME NAME OF INPUT ELEMENTS FOR WHOLE PART.
 """
@@ -246,7 +246,7 @@ These are lists of groups of jointly shifted microbiomes, cells, and/or proteins
 
 {table3}
 
-Provide your analysis in a clear, structured format.
+Provide your analysis in a clear, structured format for the jointed shifts.
 USE SAME NAME OF INPUT ELEMENTS FOR WHOLE PART.
 """
 
@@ -808,4 +808,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
