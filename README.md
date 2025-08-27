@@ -36,9 +36,13 @@ You can try
 
 
 ### 3. API key
-1. Create an OpenAI account. https://platform.openai.com/
-   
-2. Once logged in, click your profile icon (top-right corner) → Manage Account → Billing.
+1. Be signed up for OpenAI.
+
+   https://platform.openai.com/
+
+(NOTE: For new users Sign up, create an account, generate an API key by providing an API Key Name and a Project Name when prompted. Copy the generated key and store it in a safe, secure location — you’ll need it to access the API.)
+
+3. Once logged in, click your profile icon (top-right corner) → Manage Account → Billing.
    
 2. In the Billing section, set up Prepaid Billing or Auto Recharge
    Prepaid: Manually add credit (e.g., $5, $10).
@@ -60,6 +64,7 @@ You can try
  `conda install anaconda::graphviz` 
 
  If graphviz is not installed from conda then you can install it from terminal:
+ 
   `pip install graphviz` 
 
 ## How to prepare input files
