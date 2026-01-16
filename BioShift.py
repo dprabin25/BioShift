@@ -1,42 +1,6 @@
 # -*- coding: utf-8 -*-
+@author: pdawadi
 """
-Batch GPT + Graphviz (single-file, config.txt)
-Created: 2025-08-15
-
-Features
-- Reads KEY, DEFAULT_MODEL, TEMPERATURE, MAX_TOKENS from config.txt
-  (KEY may be empty -> fallback to env var OPENAI_API_KEY)
-- Modes:
-  Table3 flows:
-    • table3_direct   (with optional --table3; if omitted, scans inputs/table3/)
-    • table3_batch    (process all *.csv under inputs/table3/)
-  Observed flows:
-    • shift_only
-    • full_with_graphviz
-    • full_no_graphviz
-    • interpret_only
-    • interpret_and_graphviz
-    • graphviz_only
-    • prompt_co
-- Optional --observed_dir to override observed folder
-- Output layout auto-created:
-    inputs/
-      observed/*.csv
-      graphviz/*.dot (or .txt)
-      table3/*.csv
-    outputs/
-
-Requirements
-- Python 3.9+
-- pip install openai pandas
-- Graphviz installed & 'dot' available on PATH for highlighting output images
-
-Notes
-- Works with BOTH openai>=1.x (OpenAI client) and older openai<=0.x libraries.
-- Observed CSVs must have a column starting with 'Element' (e.g. 'Element').
-- To build Table2/3, the observed CSV must have 'Observed Shift'.
-"""
-
 import argparse
 import json
 import os
@@ -52,12 +16,12 @@ from tempfile import NamedTemporaryFile
 try:
     import pandas as pd
 except Exception:
-    sys.exit("❌ The 'pandas' package is required. Install with: pip install pandas")
+    sys.exit("The 'pandas' package is required. Install with: pip install pandas")
 
 try:
     import openai  # We support both OpenAI 1.x and legacy 0.x
 except Exception:
-    sys.exit("❌ The 'openai' package is required. Install with: pip install openai")
+    sys.exit("The 'openai' package is required. Install with: pip install openai")
 
 
 # ─────────────────── Config (single config.txt beside this .py) ────────────
@@ -86,7 +50,7 @@ def load_api_key() -> str:
     if not key:
         key = os.getenv("OPENAI_API_KEY", "").strip()
     if not key:
-        sys.exit("❌ No API key found. Put KEY=... in config.txt (same folder) "
+        sys.exit("No API key found. Put KEY=... in config.txt (same folder) "
                  "or set the OPENAI_API_KEY environment variable.")
     return key
 
@@ -94,7 +58,7 @@ def load_gpt_options() -> dict:
     kv = _parse_simple_kv(CONFIG_TXT)
     default_model = (kv.get("DEFAULT_MODEL") or "").strip()
     if not default_model:
-        sys.exit("❌ DEFAULT_MODEL not set in config.txt.")
+        sys.exit("DEFAULT_MODEL not set in config.txt.")
     try:
         temperature = float(kv.get("TEMPERATURE", "0.2"))
     except ValueError:
@@ -298,10 +262,10 @@ def call_openai(prompt: str) -> str:
                 text = resp["choices"][0]["message"]["content"] or ""
                 return text.strip()
         except Exception as e:
-            print(f"⚠️  OpenAI error ({attempt}/3): {e}")
+            print(f"OpenAI error ({attempt}/3): {e}")
             last_err = e
             time.sleep(2 * attempt)
-    print("⚠️  Returning empty string after repeated OpenAI failures.")
+    print("Returning empty string after repeated OpenAI failures.")
     return ""
 
 def _extract_clean_table(raw: str, min_cols: int = 2) -> str:
@@ -357,7 +321,7 @@ def _read_pipe_table_or_empty(text: str, expected_cols_min=2) -> pd.DataFrame:
             df[col] = df[col].astype(str).map(lambda x: x.strip()).replace("nan", "")
         return df
     except Exception as e:
-        print(f"⚠️  Could not parse LLM table: {e}")
+        print(f"Could not parse LLM table: {e}")
         return pd.DataFrame()
 
 def clean_and_save_table_ab(promptA: str, promptB: str, out_csv: Path) -> pd.DataFrame:
@@ -416,18 +380,18 @@ def clean_and_save_table_ab(promptA: str, promptB: str, out_csv: Path) -> pd.Dat
     table_ab = table_ab.fillna("").sort_values("Element", kind="stable").reset_index(drop=True)
     ensure_dir(Path(out_csv).parent)
     table_ab.to_csv(out_csv, index=False, encoding="utf-8")
-    print(f"✅ Clean TableAB saved: {out_csv}")
+    print(f"Clean TableAB saved: {out_csv}")
     return table_ab
 
 def run_prompt_co(csv_path: Path, out_base: Path):
     """Run Prompt_Co on a CSV file and save output to 'Prompt_Co_Output/<stem>_PromptCo_output.txt'."""
     if not csv_path.exists():
-        print(f"❌ CSV not found: {csv_path}")
+        print(f"CSV not found: {csv_path}")
         return
     try:
         df = pd.read_csv(csv_path)
     except Exception as e:
-        print(f"❌ Failed to read {csv_path}: {e}")
+        print(f"Failed to read {csv_path}: {e}")
         return
 
     csv_text = df.to_csv(index=False)
@@ -438,7 +402,7 @@ def run_prompt_co(csv_path: Path, out_base: Path):
     ensure_dir(out_dir)
     out_file = out_dir / f"{csv_path.stem}_PromptCo_output.txt"
     out_file.write_text(output_text, encoding="utf-8")
-    print(f"✅ Prompt_Co output saved: {out_file}")
+    print(f"Prompt_Co output saved: {out_file}")
 
 
 # ─────────────────── Graphviz highlighting ─────────────────────────────────
@@ -455,12 +419,12 @@ def graph_highlight(sample: str, t3_path: Path, out_graph_dir: Path):
     try:
         df = pd.read_csv(t3_path)
     except Exception as e:
-        print(f"❌ Failed to read Table3 at {t3_path}: {e}")
+        print(f"Failed to read Table3 at {t3_path}: {e}")
         return
 
     for col in ("Element", "Observed Shift"):
         if col not in df.columns:
-            print(f"⚠️  Table3 missing '{col}'. Skipping highlight.")
+            print(f"Table3 missing '{col}'. Skipping highlight.")
             return
 
     df["Element"] = df["Element"].astype(str).map(lambda x: x.strip())
@@ -474,14 +438,14 @@ def graph_highlight(sample: str, t3_path: Path, out_graph_dir: Path):
     ensure_dir(out_graph_dir)
     graph_files = list(FOLDERS["graphviz"].glob("*.dot")) + list(FOLDERS["graphviz"].glob("*.txt"))
     if not graph_files:
-        print(f"⚠️ No Graphviz files found in {FOLDERS['graphviz']}. Put .dot/.txt files there.")
+        print(f"No Graphviz files found in {FOLDERS['graphviz']}. Put .dot/.txt files there.")
         return
 
     for graph_file in graph_files:
         try:
             text = graph_file.read_text(encoding="utf-8", errors="ignore").splitlines()
         except Exception as e:
-            print(f"⚠️ Could not read {graph_file}: {e}")
+            print(f"Could not read {graph_file}: {e}")
             continue
 
         new_lines = []
@@ -518,12 +482,12 @@ def graph_highlight(sample: str, t3_path: Path, out_graph_dir: Path):
             # Requires Graphviz 'dot' executable on PATH
             subprocess.run(["dot", "-Tjpg", str(tmp_path), "-o", str(jpg_out)],
                            check=True, capture_output=True)
-            print(f"✅ Highlighted graph saved: {jpg_out}")
+            print(f"Highlighted graph saved: {jpg_out}")
         except FileNotFoundError:
-            print("❌ Graphviz 'dot' not found. Install Graphviz and ensure 'dot' is on PATH.")
+            print("Graphviz 'dot' not found. Install Graphviz and ensure 'dot' is on PATH.")
             return
         except subprocess.CalledProcessError as e:
-            print(f"❌ Graphviz 'dot' error for {graph_file}:\n{e.stderr.decode(errors='ignore')}")
+            print(f"Graphviz 'dot' error for {graph_file}:\n{e.stderr.decode(errors='ignore')}")
         finally:
             try:
                 tmp_path.unlink(missing_ok=True)
@@ -555,7 +519,7 @@ def make_merged_table(stem, out_base, outA, outB, obs_df):
         # Locate first column starting with 'Element'
         cols = [c for c in obs_df.columns if c.lower().startswith("element")]
         if not cols:
-            print("⚠️  Observed file has no 'Element' column. Skipping Table1 merge.")
+            print("Observed file has no 'Element' column. Skipping Table1 merge.")
             merged = table_ab
         else:
             obs_df.rename(columns={cols[0]: "Element"}, inplace=True)
@@ -578,14 +542,14 @@ def make_merged_table(stem, out_base, outA, outB, obs_df):
 
     tab1_file = tables_dir / f"{stem}_table1.csv"
     merged.to_csv(tab1_file, index=False, encoding="utf-8")
-    print(f"✅ Table1 saved: {tab1_file}")
+    print(f"Table1 saved: {tab1_file}")
     return merged, tables_dir
 
 def build_table2_3(sample, context, table1, tables_dir, prompt_dir):
     req_cols = ["Element", "Observed Shift", "GPT shift 2", "Biological Group"]
     missing = [c for c in req_cols if c not in table1.columns]
     if missing:
-        print(f"⚠️  Missing columns for Table2/3: {missing}. Skipping.")
+        print(f"Missing columns for Table2/3: {missing}. Skipping.")
         return None
 
     t2 = table1[req_cols].copy()
@@ -608,7 +572,7 @@ def build_table2_3(sample, context, table1, tables_dir, prompt_dir):
 
     t2_path = Path(tables_dir) / f"{sample}_table2.csv"
     t2.to_csv(t2_path, index=False, encoding="utf-8")
-    print(f"✅ Table2 saved: {t2_path}")
+    print(f"Table2 saved: {t2_path}")
 
     # Strict Table3 rule: only rows where Observed == Expected; groups must have >1 item
     grp_sizes = t2.groupby("Biological Group")["Biological Group"].transform("size")
@@ -617,14 +581,14 @@ def build_table2_3(sample, context, table1, tables_dir, prompt_dir):
 
     t3_path = Path(tables_dir) / f"{sample}_table3.csv"
     t3.to_csv(t3_path, index=False, encoding="utf-8")
-    print(f"✅ Table3 saved: {t3_path}")
+    print(f"Table3 saved: {t3_path}")
 
     # Interpret (Prompt 3)
     interp_prompt = PROMPTS[context]["INT"].format(table3=t3.to_csv(index=False))
     interp = call_openai(interp_prompt)
     ensure_dir(prompt_dir)
     (Path(prompt_dir) / f"{sample}_Prompt3_output.txt").write_text(interp, encoding="utf-8")
-    print(f"✅ Prompt 3 saved: {Path(prompt_dir) / f'{sample}_Prompt3_output.txt'}")
+    print(f"Prompt 3 saved: {Path(prompt_dir) / f'{sample}_Prompt3_output.txt'}")
 
     return t3_path
 
@@ -657,19 +621,19 @@ def run_full(stem, ctx, with_graph, out_base):
 def run_interpret(stem, ctx, dot_required, out_base, table3_path=None):
     t3_path = Path(table3_path) if table3_path else Path(out_base) / "tables" / f"{stem}_table3.csv"
     if not t3_path.exists():
-        print(f"⚠️  Missing Table3 for {stem}: {t3_path}")
+        print(f"Missing Table3 for {stem}: {t3_path}")
         return
     try:
         df = pd.read_csv(t3_path)
     except Exception as e:
-        print(f"❌ Could not read {t3_path}: {e}")
+        print(f"Could not read {t3_path}: {e}")
         return
 
     interp_prompt = PROMPTS[ctx]["INT"].format(table3=df.to_csv(index=False))
     interp = call_openai(interp_prompt)
     ensure_dir(Path(out_base) / "prompts")
     (Path(out_base) / "prompts" / f"{stem}_Prompt3_output.txt").write_text(interp, encoding="utf-8")
-    print(f"✅ Prompt 3 saved: {Path(out_base) / 'prompts' / f'{stem}_Prompt3_output.txt'}")
+    print(f"Prompt 3 saved: {Path(out_base) / 'prompts' / f'{stem}_Prompt3_output.txt'}")
 
     if dot_required:
         graph_highlight(stem, t3_path, Path(out_base) / "graphviz")
@@ -684,7 +648,7 @@ def run_table3_direct(table3_path: Path, ctx: str, run_mode: str = "interpret_gr
     """
     t3_path = Path(table3_path)
     if not t3_path.exists():
-        sys.exit(f"❌ Table3 file not found: {t3_path}")
+        sys.exit(f"Table3 file not found: {t3_path}")
 
     sample = t3_path.stem  # preserve full stem
     parent_ctx = "Disease" if ctx == "disease" else "Healthy"
@@ -695,29 +659,29 @@ def run_table3_direct(table3_path: Path, ctx: str, run_mode: str = "interpret_gr
     try:
         df = pd.read_csv(t3_path)
     except Exception as e:
-        sys.exit(f"❌ Failed to read {t3_path}: {e}")
+        sys.exit(f"Failed to read {t3_path}: {e}")
 
     if run_mode in ("interpret_graphviz", "interpret"):
         interp_prompt = PROMPTS[ctx]["INT"].format(table3=df.to_csv(index=False))
         interp_text = call_openai(interp_prompt)
         out_file = base_dir / f"{sample}_Prompt3_output.txt"
         out_file.write_text(interp_text, encoding="utf-8")
-        print(f"✅ Prompt 3 saved: {out_file}")
+        print(f"Prompt 3 saved: {out_file}")
 
     if run_mode in ("interpret_graphviz", "graphviz"):
         graph_highlight(sample, t3_path, base_dir)
-        print(f"✅ Graphviz highlights saved in: {base_dir}")
+        print(f"Graphviz highlights saved in: {base_dir}")
 
 def run_table3_batch(ctx: str, run_mode: str = "interpret_graphviz"):
     """Process all *.csv in inputs/table3/ with table3_direct pipeline."""
     in_dir = FOLDERS["table3"]
     files = sorted(in_dir.glob("*.csv"))
     if not files:
-        sys.exit(f"❌ No CSV files found in {in_dir}")
+        sys.exit(f"No CSV files found in {in_dir}")
     for csv in files:
-        print(f"\n🔎 Table3-direct: processing {csv.name}")
+        print(f"\n Table3-direct: processing {csv.name}")
         run_table3_direct(csv, ctx, run_mode)
-    print("\n✅ Table3-direct batch finished.")
+    print("\n Table3-direct batch finished.")
 
 
 # ─────────────────── CLI ───────────────────────────────────────────────────
@@ -762,7 +726,7 @@ def main():
         else:
             # Scan inputs/table3/
             run_table3_batch(args.context, args.run)
-        print("\n✅ Table3-direct pipeline finished.")
+        print("\n Table3-direct pipeline finished.")
         return
 
     if args.mode == "table3_batch":
@@ -773,16 +737,16 @@ def main():
     csv_stems = sorted([p.stem for p in FOLDERS["observed"].glob("*.csv")])
     if args.sample:
         if args.sample not in csv_stems:
-            sys.exit(f"❌ Sample '{args.sample}' not found in {FOLDERS['observed']}/")
+            sys.exit(f" Sample '{args.sample}' not found in {FOLDERS['observed']}/")
         csv_stems = [args.sample]
     if not csv_stems:
-        sys.exit(f"❌ No CSV files in {FOLDERS['observed']}/")
+        sys.exit(f" No CSV files in {FOLDERS['observed']}/")
 
     for stem in csv_stems:
         parent_ctx = "Disease" if args.context == "disease" else "Healthy"
         out_base = FOLDERS["output"] / parent_ctx / stem
         ensure_dir(out_base)
-        print(f"\n🔄 Processing {stem}.csv as {args.context} → {out_base}")
+        print(f"\n Processing {stem}.csv as {args.context} → {out_base}")
 
         if args.mode == "shift_only":
             run_shift_only(stem, args.context, out_base)
@@ -799,14 +763,15 @@ def main():
             if t3_path.exists():
                 graph_highlight(stem, t3_path, Path(out_base) / "graphviz")
             else:
-                print(f"⚠️  Skipping graphviz_only for {stem}; missing {t3_path}")
+                print(f"  Skipping graphviz_only for {stem}; missing {t3_path}")
         elif args.mode == "prompt_co":
             obs_path = FOLDERS["observed"] / f"{stem}.csv"
             run_prompt_co(obs_path, out_base)
 
-    print("\n✅ Pipeline finished for all samples.")
+    print("\n Pipeline finished for all samples.")
 
 if __name__ == "__main__":
     main()
+
 
 
