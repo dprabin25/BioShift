@@ -177,7 +177,7 @@ For those with known associations, identify whether they are typically reported 
 
 Reporting Instructions:
 Create a summary table of your findings. Include only the items with established associations. For each item, report the observed direction of change (increase, decrease, mixed, or unknown). Exclude items with no prior evidence of association from the table.
-( Summary table 'A', Always use numbers in real output if increase = 1, decrease = -1, Others = 0, Information not available = X, present the table using "|" (pipe) as the column separator, and ensure there are no extra spaces.)
+( The table should contain columns “Element” and “GPT shift 1”. Also make sure each element should have its own row. Summary table 'A', Always use numbers in real output if increase = 1, decrease = -1, Others = 0, Information not available = X, present the table using "|" (pipe) as the column separator, and ensure there are no extra spaces.)
 
 USE SAME NAME OF INPUT ELEMENTS FOR WHOLE PART.
 """
