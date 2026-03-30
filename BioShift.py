@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""
 @author: pdawadi
 """
 import argparse
@@ -123,7 +124,7 @@ For those with known associations, identify whether they are typically reported 
 Reporting Instructions:
 Create a summary table of your findings. Include only the items with established associations. For each item, report the observed direction of change (increase, decrease, mixed, or unknown). Exclude items with no prior evidence of association from the table.
 
-( The table should contain columns “Element” and “GPT shift 1”. Also make sure each element should have its own row. Summary table 'A', Always use numbers in real output if increase = 1, decrease = -1, Others = 0, Information not available = X, present the table using "|" (pipe) as the column separator, and ensure there are no extra spaces.)
+( The table should contain columns "Element" and "GPT shift 1". Also make sure each element should have its own row. Summary table 'A', Always use numbers in real output if increase = 1, decrease = -1, Others = 0, Information not available = X, present the table using "|" (pipe) as the column separator, and ensure there are no extra spaces.)
 
 USE SAME NAME OF INPUT ELEMENTS FOR WHOLE PART.
 """
@@ -142,9 +143,9 @@ For each identified group or pair, determine whether each element is typically r
 Reporting Instructions:
 Create a summary table of your findings. Include only those groups or pairs with established evidence of joint shifts.
 
-(Summary table 'B', Include columns “Element”, “GPT shift 2”, “Biological Group”, "Group ID based on Biological Group", “Notes (if any)”)
+(Summary table 'B', Include columns "Element", "GPT shift 2", "Biological Group", "Group ID based on Biological Group", "Notes (if any)")
 "Biological Group" should be based on joint functional and mechanistic activity of grouped elements and completely without generic labels.
-“Group ID based on Biological Group” should have same group ID based on "Biological Group". Every element should be categorized on shared biological activities.
+"Group ID based on Biological Group" should have same group ID based on "Biological Group". Every element should be categorized on shared biological activities.
 Always use numbers in real output if increase = 1, decrease = -1, Others = 0, Information not available = X, present the table using "|" (pipe) as the column separator, and ensure there are no extra spaces.)
 
 USE SAME NAME OF INPUT ELEMENTS FOR WHOLE PART.
@@ -177,7 +178,7 @@ For those with known associations, identify whether they are typically reported 
 
 Reporting Instructions:
 Create a summary table of your findings. Include only the items with established associations. For each item, report the observed direction of change (increase, decrease, mixed, or unknown). Exclude items with no prior evidence of association from the table.
-( The table should contain columns “Element” and “GPT shift 1”. Also make sure each element should have its own row. Summary table 'A', Always use numbers in real output if increase = 1, decrease = -1, Others = 0, Information not available = X, present the table using "|" (pipe) as the column separator, and ensure there are no extra spaces.)
+( The table should contain columns "Element" and "GPT shift 1". Also make sure each element should have its own row. Summary table 'A', Always use numbers in real output if increase = 1, decrease = -1, Others = 0, Information not available = X, present the table using "|" (pipe) as the column separator, and ensure there are no extra spaces.)
 
 USE SAME NAME OF INPUT ELEMENTS FOR WHOLE PART.
 """
@@ -194,9 +195,9 @@ For each item in the input list, identify any groups or pairs of elements that a
 For each identified group or pair, determine whether each element is typically reported to increase, decrease, or show mixed patterns. If the direction is unknown or unclear, indicate this as well.
 
 Reporting Instructions:
-(Summary table 'B', Include columns “Element”, “GPT shift 2”, “Biological Group”, "Group ID based on Biological Group", “Notes (if any)”)
+(Summary table 'B', Include columns "Element", "GPT shift 2", "Biological Group", "Group ID based on Biological Group", "Notes (if any)")
 "Biological Group" should be based on joint functional and mechanistic activity of grouped elements and completely without generic labels.
-“Group ID based on Biological Group” should have same group ID based on "Biological Group". Every element should be categorized on shared biological activities.
+"Group ID based on Biological Group" should have same group ID based on "Biological Group". Every element should be categorized on shared biological activities.
 Always use numbers in real output if increase = 1, decrease = -1, Others = 0, Information not available = X, present the table using "|" (pipe) as the column separator, and ensure there are no extra spaces.)
 
 USE SAME NAME OF INPUT ELEMENTS FOR WHOLE PART.
