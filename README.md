@@ -157,7 +157,7 @@ UniProt is queried live over its own API (results are cached locally) rather tha
 ## 4. Running BioShift
 
 ```
-python BioShiftUpdated.py --sample <sample> --mode <mode>
+python BioShift.py --sample <sample> --mode <mode>
 ```
 
 `--sample` takes either one sample's name (its CSV's filename in `ObservedShift/`, without `.csv`) or the literal value `all`, which runs every `*.csv` already in `ObservedShift/` one after another in the same command — each still gets its own `outputs/<sample>/` folder and its own `<sample>_log.txt` with that sample's own cost, not a shared running total.
@@ -173,13 +173,13 @@ python BioShiftUpdated.py --sample <sample> --mode <mode>
 For example, to run the full pipeline (literature evidence, co-shift/knowledge-base evidence, and biological interpretation) on `Testdata`:
 
 ```
-python BioShiftUpdated.py --sample Testdata --mode P123
+python BioShift.py --sample Testdata --mode P123
 ```
 
 Or on every sample currently in `ObservedShift/`:
 
 ```
-python BioShiftUpdated.py --sample all --mode P123
+python BioShift.py --sample all --mode P123
 ```
 
 If you only need Table 1, running with the default `--mode P1` is faster and cheaper — no Graphviz or knowledge-base setup is needed either.
