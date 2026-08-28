@@ -3,23 +3,6 @@
 BioShiftUpdated.py -- Prompt 1 -> Table 1, Prompt 2 -> Table 2/Table 3, and
 Prompt 3 -> biological interpretation, for isolated review.
 
-Extracted from BioShift.py (BioShift_Prompts_0729_PD architecture): the real
-PubMed retrieval + Prompt 1 (Literature Extraction) + Table 1 build path
-(the "combined multi-element search ranked by co-occurrence" retrieval
-strategy, 5x extraction ensemble + majority-vote consensus), Prompt 2
-(co-shift detection) + Table 2/Table 3, and Prompt 3 (biological
-interpretation) + a Table-3-only knowledge-evidence Graphviz figure
-(build_table3_knowledge_graph). BioShift.py's own full multi-layer network
-figure (KB-neighborhood expansion + Prompt 3 general-knowledge edges) is
-deliberately NOT ported here -- out of scope for this trimmed script.
-
-Fully standalone, self-contained inside BioShift_0729/fix/: this file reads
-its own local config.txt, Database/ (structured KB source files --
-ImmuneXpresso interactions and the ImmPort Cytokine Registry; MASI and
-MiMeDB are not used by this pipeline), ObservedShift/ (observed-shift input CSVs), uniprot_cache_v2/
-(and its sibling uniprot_virulence_cache_v2/), and pubmed_cache/
--- all siblings of this .py file -- rather than anything from the parent
-BioShift_0729/ folder. Its own outputs/ stays local too.
 
 @author: pdawadi
 """
