@@ -19,4 +19,4 @@ The activation of dendritic cells by IL-1B is crucial for their maturation and t
 Overall, the proposed mechanisms consistently reflect the observed shifts in the dataset, with literature providing robust support for the roles of neutrophils, dendritic cells, and macrophages in mediating the inflammatory response in periodontitis. However, while the evidence is largely consistent, some variability in the literature regarding the specific contributions of individual cytokines may reflect the complexity of the immune response in different contexts.
 
 # Unsupported Elements in grouping
-None
+P. micra
