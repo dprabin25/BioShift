@@ -156,6 +156,13 @@ UniProt is queried live over its own API (results are cached locally) rather tha
 
 ## 4. Running BioShift
 
+Go to the working directory. 
+
+E.g.
+
+<img width="667" height="72" alt="image" src="https://github.com/user-attachments/assets/2273c67a-2fce-4d40-913d-da4eeec0b033" />
+
+
 ```
 python BioShift.py --sample <sample> --mode <mode>
 ```
