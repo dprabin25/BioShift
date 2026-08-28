@@ -10,7 +10,7 @@ Once set up, your working folder looks like this:
 
 ```
 your-project-folder/
-├── BioShiftUpdated.py
+├── BioShift.py
 ├── config.txt
 ├── requirements.txt
 ├── Database/                          <- knowledge-base reference files (you provide)
