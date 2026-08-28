@@ -2,6 +2,25 @@
 """
 BioShiftUpdated.py -- Prompt 1 -> Table 1, Prompt 2 -> Table 2/Table 3, and
 Prompt 3 -> biological interpretation, for isolated review.
+
+Extracted from BioShift.py (BioShift_Prompts_0729_PD architecture): the real
+PubMed retrieval + Prompt 1 (Literature Extraction) + Table 1 build path
+(the "combined multi-element search ranked by co-occurrence" retrieval
+strategy, 5x extraction ensemble + majority-vote consensus), Prompt 2
+(co-shift detection) + Table 2/Table 3, and Prompt 3 (biological
+interpretation) + a Table-3-only knowledge-evidence Graphviz figure
+(build_table3_knowledge_graph). BioShift.py's own full multi-layer network
+figure (KB-neighborhood expansion + Prompt 3 general-knowledge edges) is
+deliberately NOT ported here -- out of scope for this trimmed script.
+
+Fully standalone, self-contained inside BioShift_0729/fix/: this file reads
+its own local config.txt, Database/ (structured KB source files --
+ImmuneXpresso interactions and the ImmPort Cytokine Registry; MASI and
+MiMeDB are not used by this pipeline), ObservedShift/ (observed-shift input CSVs), uniprot_cache_v2/
+(and its sibling uniprot_virulence_cache_v2/), and pubmed_cache/
+-- all siblings of this .py file -- rather than anything from the parent
+BioShift_0729/ folder. Its own outputs/ stays local too.
+
 @author: pdawadi
 """
 import argparse
@@ -2636,6 +2655,12 @@ def find_uniprot_function_mentions(elements, sample_model: str = None) -> list:
 # read back and treated as if it already had a (missing) go_terms key.
 UNIPROT_VIRULENCE_CACHE_DIR = HERE / "uniprot_virulence_cache_v2"
 UNIPROT_VIRULENCE_KEYWORD = "KW-0843"  # UniProt's own official "Virulence" keyword ID
+# Every master-list element gets its own live UniProt search (no curated
+# taxonomy pre-filter -- see find_uniprot_virulence_mentions), so this runs
+# them concurrently rather than one HTTP round trip at a time; each call is
+# a plain UniProt REST GET (rate-limited server-side, not a paid LLM call),
+# so a modest fixed worker count is safe without a config.txt knob.
+UNIPROT_VIRULENCE_MAX_CONCURRENT = 8
 # Fixed, deterministic Relation text find_uniprot_virulence_mentions gives
 # every real virulence edge (see that function's own docstring for why this
 # is fixed rather than LLM-authored) -- pulled into one shared constant
@@ -2800,17 +2825,25 @@ def _fetch_uniprot_virulence_proteins(organism: str) -> list:
           f"{len(records)} real KW-0843-tagged entr{'y' if len(records) == 1 else 'ies'}.")
     return records
 
-def find_uniprot_virulence_mentions(elements) -> list:
+def find_uniprot_virulence_mentions(elements, gene_info: dict = None) -> list:
     """For every Table3 element, live-queries UniProt's own KW-0843
     ("Virulence" keyword) search for every real curated protein entry
     UniProt itself has tagged as a virulence factor for that exact element
     name, matched via UniProt's own organism_name free-text field (see
-    _fetch_uniprot_virulence_proteins). There is no pre-filter deciding
-    which elements are "real microbes" -- every element is queried by the
-    name the user typed, and a non-microbe element (a cytokine, a cell
-    type) or an organism name UniProt doesn't recognize simply comes back
-    with zero hits, never an error; it is up to the user to type the
-    organism name UniProt itself recognizes. One dict per real matched UniProt
+    _fetch_uniprot_virulence_proteins). There is no curated taxonomy file
+    deciding which elements are "real microbes" -- every element not
+    already ruled out below is queried by the name the user typed, and a
+    non-microbe element (a cell type) or an organism name UniProt doesn't
+    recognize simply comes back with zero hits, never an error; it is up
+    to the user to type the organism name UniProt itself recognizes. The
+    one real, structural (not curated) filter that IS applied: an element
+    already present in `gene_info` has already been matched to a real
+    ImmPort Cytokine Registry entry (a cytokine/protein, never an
+    organism), so it is skipped here without a network call -- that's a
+    fact this pipeline already established elsewhere, not a guess. Every
+    remaining element is queried concurrently (see
+    UNIPROT_VIRULENCE_MAX_CONCURRENT) since each is an independent live
+    UniProt round trip. One dict per real matched UniProt
     entry, with keys: Source (organism element name), Target (protein
     name), Accession (real UniProt accession -- this row's own citable ID,
     same _KB_EDGE_ID_FIELD['UniProt'] convention find_uniprot_function_
@@ -2847,11 +2880,31 @@ def find_uniprot_virulence_mentions(elements) -> list:
     *type*); the separate description/evidence *text* shown alongside it is
     what the new LLM call above produces from Function_Text/GO_Terms."""
     elements = [str(e).strip() for e in elements if str(e).strip()]
-    if not elements:
+    gene_info = gene_info or {}
+    query_elements = [e for e in elements if e not in gene_info]
+    skipped = len(elements) - len(query_elements)
+    if not query_elements:
         return []
+    if skipped:
+        print(f"UniProt virulence search: skipping {skipped} registry-matched "
+              f"cytokine/protein element(s) (never organisms); querying "
+              f"{len(query_elements)} remaining element(s).")
+
+    records_by_elem = {}
+    with ThreadPoolExecutor(max_workers=UNIPROT_VIRULENCE_MAX_CONCURRENT) as pool_exec:
+        futures = {pool_exec.submit(_fetch_uniprot_virulence_proteins, elem): elem
+                   for elem in query_elements}
+        for fut in as_completed(futures):
+            elem = futures[fut]
+            try:
+                records_by_elem[elem] = fut.result()
+            except Exception as e:
+                print(f"UniProt virulence search raised for \"{elem}\" ({e}); treated as no hits.")
+                records_by_elem[elem] = None
+
     edges = []
-    for elem in elements:
-        records = _fetch_uniprot_virulence_proteins(elem)
+    for elem in query_elements:  # preserve deterministic input order, not completion order
+        records = records_by_elem.get(elem)
         if not records:
             continue
         for r in records:
@@ -4014,7 +4067,7 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
     # separate call (_label_uniprot_virulence_descriptions_via_llm, right
     # below) grounded in Function_Text/GO_Terms rather than a shared
     # sentence.
-    virulence_edges = find_uniprot_virulence_mentions(elements)
+    virulence_edges = find_uniprot_virulence_mentions(elements, gene_info)
     for e in virulence_edges:
         raw_edges.append(("UniProt", e))
 
