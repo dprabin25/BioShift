@@ -2,6 +2,25 @@
 """
 BioShiftUpdated.py -- Prompt 1 -> Table 1, Prompt 2 -> Table 2/Table 3, and
 Prompt 3 -> biological interpretation, for isolated review.
+
+Extracted from BioShift.py (BioShift_Prompts_0729_PD architecture): the real
+PubMed retrieval + Prompt 1 (Literature Extraction) + Table 1 build path
+(the "combined multi-element search ranked by co-occurrence" retrieval
+strategy, 5x extraction ensemble + majority-vote consensus), Prompt 2
+(co-shift detection) + Table 2/Table 3, and Prompt 3 (biological
+interpretation) + a Table-3-only knowledge-evidence Graphviz figure
+(build_table3_knowledge_graph). BioShift.py's own full multi-layer network
+figure (KB-neighborhood expansion + Prompt 3 general-knowledge edges) is
+deliberately NOT ported here -- out of scope for this trimmed script.
+
+Fully standalone, self-contained inside BioShift_0729/fix/: this file reads
+its own local config.txt, Database/ (structured KB source files --
+ImmuneXpresso interactions and the ImmPort Cytokine Registry; MASI and
+MiMeDB are not used by this pipeline), ObservedShift/ (observed-shift input CSVs), uniprot_cache_v2/
+(and its sibling uniprot_virulence_cache_v2/), and pubmed_cache/
+-- all siblings of this .py file -- rather than anything from the parent
+BioShift_0729/ folder. Its own outputs/ stays local too.
+
 @author: pdawadi
 """
 import argparse
@@ -158,8 +177,9 @@ def load_kb_flag() -> bool:
     Defaults to On. Set to Off in config.txt to skip it (e.g. if the
     Database/ files aren't present). MASI and MiMeDB are not part of this
     lookup; neither data file is loaded anywhere. The Table 3 knowledge
-    graph's microbe node shape is detected via organism_taxonomy_ids.csv
-    instead (see build_table3_knowledge_graph)."""
+    graph's microbe node shape is derived structurally from its own
+    UniProt-virulence edges instead (see build_table3_knowledge_graph),
+    no separate taxonomy file needed."""
     kv = _parse_simple_kv(CONFIG_TXT)
     return (kv.get("KNOWLEDGE_BASE", "On") or "On").strip().lower() in ("on", "true", "1", "yes")
 
@@ -461,8 +481,9 @@ for p in FOLDERS.values():
 # pathway-co-membership relationship layer (from the ImmPort immune-GO
 # gene sets) and MASI/MiMeDB were evaluated and dropped (found no genuine
 # signal). MASI and MiMeDB are not loaded anywhere; the knowledge graph's
-# microbe node shape is detected via organism_taxonomy_ids.csv instead
-# (see build_table3_knowledge_graph).
+# microbe node shape is derived structurally from its own UniProt-virulence
+# edges instead (see build_table3_knowledge_graph) -- no separate taxonomy
+# file needed.
 KB_DIR = HERE / "Database"
 KB_IMMUNEXPRESSO_FILE = KB_DIR / "ImmuneXpressoResults_Interactions.csv"
 KB_CYTOKINE_REGISTRY_FILE = KB_DIR / "ImmPort_CytokineRegistry.November_2015.xls"
@@ -789,8 +810,7 @@ def extract_elements(observed_path: Path):
     return elements, df
 
 
-_KB_CACHE = {"immunexpresso": None, "cytokine_registry": None,
-             "organism_taxonomy": None, "organism_taxonomy_synonyms": None}
+_KB_CACHE = {"immunexpresso": None, "cytokine_registry": None}
 
 # Cytokine/protein names commonly use Greek-letter subscripts (IL-1alpha,
 # TNF-alpha, IFN-gamma, ...). Transliterate these to Latin BEFORE stripping
@@ -1271,14 +1291,15 @@ def _element_name_variants(element: str, gene_info: dict = None) -> list:
     stimulatory factor 2'), plus standard cell-type acronym expansions
     (e.g. 'APC' -> 'antigen-presenting cell'/'antigen presenting cell'),
     plus any explicit, hand-curated supplementary terms from
-    _ELEMENT_SUPPLEMENTARY_SEARCH_TERMS, plus (for microbe elements) an
-    NCBI-verified reclassified/synonym name from organism_taxonomy_ids.csv
-    (see _load_organism_taxonomy_synonyms -- e.g. 'Lactobacillus panis'
-    also searches 'Limosilactobacillus panis', the genus NCBI now uses),
-    plus a singular/plural counterpart for every name collected so far
-    (standard English 's'/'es' pluralization only). Used both to build
-    PubMed queries and to detect which elements a given abstract actually
-    mentions."""
+    _ELEMENT_SUPPLEMENTARY_SEARCH_TERMS, plus a singular/plural
+    counterpart for every name collected so far (standard English
+    's'/'es' pluralization only). Used both to build PubMed queries and
+    to detect which elements a given abstract actually mentions. Microbe
+    elements get no separate reclassified/synonym injection here -- the
+    element name is searched exactly as the user typed it in the
+    observed-shift CSV, so a genus reclassification (e.g. 'Lactobacillus
+    panis' vs. 'Limosilactobacillus panis') is only caught if the user's
+    own element name already uses the name they want searched."""
     names = [element]
     if gene_info and element in gene_info:
         names.extend(gene_info[element].get("synonyms", []) or [])
@@ -1287,9 +1308,6 @@ def _element_name_variants(element: str, gene_info: dict = None) -> list:
             names.append(official)
     names.extend(_acronym_expansions(element))
     names.extend(_ELEMENT_SUPPLEMENTARY_SEARCH_TERMS.get(_norm_name(element), []))
-    organism_synonym = _load_organism_taxonomy_synonyms().get(element)
-    if organism_synonym:
-        names.append(organism_synonym)
     plural_extra = []
     for n in names:
         plural_extra.extend(_pluralize_variant(n))
@@ -2610,7 +2628,7 @@ def find_uniprot_function_mentions(elements, sample_model: str = None) -> list:
     return edges
 
 
-# ─────── UniProt live lookup (virulence proteins by organism taxonomy) ─────
+# ─────── UniProt live lookup (virulence proteins by organism name) ────────
 # A SECOND, structurally distinct UniProt integration alongside
 # find_uniprot_function_mentions above. That layer fetches ONE protein's own
 # curated entry (per-accession /uniprotkb/{id}.json) and scans its FUNCTION
@@ -2618,16 +2636,19 @@ def find_uniprot_function_mentions(elements, sample_model: str = None) -> list:
 # because two names are co-mentioned in one real sentence. This layer
 # instead hits UniProt's own REST *search* endpoint
 # (rest.uniprot.org/uniprotkb/search) for every real, curated UniProt entry
-# tagged with UniProt's own "Virulence" keyword (KW-0843) AND matched to one
-# specific organism's real NCBI Taxonomy ID -- an edge exists here because
-# UniProt's own taxonomy + keyword annotation directly ties that protein to
-# that organism, not because of any shared sentence. Source is always a
-# Table3 MICROBE element (the organism itself, never a protein); Target is
-# the real virulence protein's own name. Taxonomy IDs come from
-# organism_taxonomy_ids.csv (see _load_organism_taxonomy_ids below) -- a
-# real, user-verified NCBI Taxonomy ID per organism, built and checked
-# separately from this pipeline's own code.
-ORGANISM_TAXONOMY_FILE = HERE / "organism_taxonomy_ids.csv"
+# tagged with UniProt's own "Virulence" keyword (KW-0843) AND matched to an
+# organism by NAME (UniProt's own free-text "organism_name" search field) --
+# an edge exists here because UniProt's own organism + keyword annotation
+# directly ties that protein to that organism, not because of any shared
+# sentence. Source is always a Table3 MICROBE element (the organism itself,
+# never a protein); Target is the real virulence protein's own name. There is
+# no separate curated taxonomy-ID file: every element name from the user's
+# own observed-shift CSV is queried by that exact name, so it is up to the
+# user to type the organism name UniProt itself recognizes (matching
+# UniProt's own "Organism" field, e.g. 'Streptococcus sanguinis'). A
+# non-microbe element (a cytokine, a cell type) simply returns zero
+# KW-0843-tagged hits here -- never an error -- so no separate pre-filter is
+# needed to decide which elements are "real microbes" before querying.
 # _v2: renamed when the go_terms (go_f) field was added to the cached
 # records below, so a pre-existing 3-field cache (protein_name, accession,
 # function_text only) from before that field existed can never be silently
@@ -2643,70 +2664,6 @@ UNIPROT_VIRULENCE_KEYWORD = "KW-0843"  # UniProt's own official "Virulence" keyw
 # _is_virulence_edge flag) without a 3rd independent copy of this string
 # that could silently drift out of sync.
 VIRULENCE_RELATION_LABEL = "UniProt-annotated virulence factor (KW-0843)"
-
-def _load_organism_taxonomy_ids() -> dict:
-    """Real, user-verified {element_name: ncbi_taxonomy_id} map for this
-    pipeline's microbe elements, from organism_taxonomy_ids.csv (columns:
-    Organism, NCBI Taxonomy ID, NCBI Matched Name, Notes). 'Organism' values
-    match Table3 element names verbatim (confirmed against CaseStudy's own
-    element list -- e.g. 'Streptococcus sanguinis', 'Dialister invisus').
-    Only rows with a non-empty NCBI Taxonomy ID are kept -- an organism this
-    file couldn't verify a real taxid for is skipped here entirely, never
-    given a fabricated one. Cached for the life of one process run, same
-    _KB_CACHE convention as _load_cytokine_registry above. This is also
-    the pipeline's only real microbe-identity source now that MiMeDB is
-    fully removed -- see build_table3_knowledge_graph's node-shape
-    detection, which uses this instead."""
-    if _KB_CACHE["organism_taxonomy"] is not None:
-        return _KB_CACHE["organism_taxonomy"]
-    out = {}
-    if not ORGANISM_TAXONOMY_FILE.exists():
-        print(f"KB file not found (skipping): {ORGANISM_TAXONOMY_FILE}")
-    else:
-        try:
-            df = pd.read_csv(ORGANISM_TAXONOMY_FILE, dtype=str, keep_default_na=False)
-            for _, row in df.iterrows():
-                organism = str(row.get("Organism", "")).strip()
-                taxid = str(row.get("NCBI Taxonomy ID", "")).strip()
-                if organism and taxid:
-                    out[organism] = taxid
-        except Exception as e:
-            print(f"Could not read {ORGANISM_TAXONOMY_FILE}: {e}")
-    _KB_CACHE["organism_taxonomy"] = out
-    return out
-
-def _load_organism_taxonomy_synonyms() -> dict:
-    """Real, already-verified {element_name: ncbi_matched_name} map, from
-    organism_taxonomy_ids.csv's own 'NCBI Matched Name' column -- only kept
-    when that column is non-empty AND actually differs from 'Organism'
-    (e.g. 'Lactobacillus panis' -> 'Limosilactobacillus panis', a real 2020
-    genus reclassification NCBI's own Taxonomy database records; blank for
-    rows where NCBI's canonical name already matches the CaseStudy element
-    name exactly, e.g. 'Dialister micraerophilus'). This brings microbe
-    elements' PubMed search up to the same real-synonym standard
-    cytokine/protein elements already have via the ImmPort Cytokine
-    Registry (find_gene_identity_info) and cell-type elements already
-    have via _acronym_expansions. No new lookup happens here -- this
-    reads the exact same, already-verified CSV _load_organism_taxonomy_ids
-    reads, just a different column, so nothing is guessed or fabricated.
-    Cached with its own _KB_CACHE key so a fresh read of the CSV isn't
-    forced just because _load_organism_taxonomy_ids happened to run first
-    (or not at all) this process."""
-    if _KB_CACHE.get("organism_taxonomy_synonyms") is not None:
-        return _KB_CACHE["organism_taxonomy_synonyms"]
-    out = {}
-    if ORGANISM_TAXONOMY_FILE.exists():
-        try:
-            df = pd.read_csv(ORGANISM_TAXONOMY_FILE, dtype=str, keep_default_na=False)
-            for _, row in df.iterrows():
-                organism = str(row.get("Organism", "")).strip()
-                matched = str(row.get("NCBI Matched Name", "")).strip()
-                if organism and matched and matched.lower() != organism.lower():
-                    out[organism] = matched
-        except Exception as e:
-            print(f"Could not read {ORGANISM_TAXONOMY_FILE} for synonyms: {e}")
-    _KB_CACHE["organism_taxonomy_synonyms"] = out
-    return out
 
 def _clean_uniprot_cc_function_text(raw: str) -> str:
     """Clean a raw 'Function [CC]' TSV cell from UniProt's search endpoint
@@ -2750,18 +2707,30 @@ def _clean_uniprot_cc_function_text(raw: str) -> str:
 # for how the LLM-authored text (or that fallback) reaches Table 3's
 # Evidence/quote column.
 
-def _fetch_uniprot_virulence_proteins(taxid: str, organism: str = "") -> list:
+def _organism_cache_key(organism: str) -> str:
+    """Filesystem-safe cache key for one organism name -- lowercased, with
+    every run of non-alphanumeric characters collapsed to a single
+    underscore, so e.g. 'Streptococcus sanguinis' and 'streptococcus
+    SANGUINIS' share one cache entry."""
+    key = re.sub(r"[^a-z0-9]+", "_", organism.strip().lower()).strip("_")
+    return key or "unnamed"
+
+def _fetch_uniprot_virulence_proteins(organism: str) -> list:
     """Live UniProt REST *search* query (rest.uniprot.org/uniprotkb/search --
     NOT the per-accession endpoint _fetch_uniprot_function uses above) for
     every real UniProt entry tagged with keyword KW-0843 ("Virulence") AND
-    matched to this organism's real NCBI Taxonomy ID. Query shape confirmed
-    working via live testing:
-    '(keyword:KW-0843) AND (taxonomy_id:<ID>)', fields=protein_name,
-    accession,cc_function,go_f, format=tsv -- header row 'Protein names /
-    Entry / Function [CC] / Gene Ontology (molecular function)'. `go_f` is
-    UniProt's own real field ID for "Gene Ontology (molecular function)"
-    (confirmed via live testing, e.g. a real returned cell:
-    'identical protein binding [GO:0042802]; toxin activity [GO:0090729]').
+    matched to this organism BY NAME (UniProt's own 'organism_name' free-text
+    search field): '(keyword:KW-0843) AND (organism_name:"<name>")',
+    fields=protein_name,accession,cc_function,go_f, format=tsv -- header row
+    'Protein names / Entry / Function [CC] / Gene Ontology (molecular
+    function)'. `go_f` is UniProt's own real field ID for "Gene Ontology
+    (molecular function)" (confirmed via live testing, e.g. a real returned
+    cell: 'identical protein binding [GO:0042802]; toxin activity
+    [GO:0090729]'). There is no curated taxonomy-ID lookup behind this --
+    the element name is passed to UniProt exactly as the user typed it in
+    their observed-shift CSV, so a name UniProt doesn't recognize (a typo, a
+    non-organism element such as a cytokine) simply returns zero hits here,
+    never an error.
 
     Returns a list of {protein_name, accession, function_text, go_terms}
     dicts (one per real matched UniProt entry, function_text already
@@ -2769,26 +2738,27 @@ def _fetch_uniprot_virulence_proteins(taxid: str, organism: str = "") -> list:
     semicolon-separated 'term [GO:NNNNNNN]' cell text, left unsplit --
     downstream consumers only need it as prose for the virulence-
     description LLM call, not as structured GO IDs). An EMPTY LIST is a
-    real, valid result -- confirmed via live testing that several real
-    organisms genuinely have zero KW-0843-tagged entries -- and is cached
-    exactly like a non-empty one. Returns None (never an empty list) only
-    on a genuine network/parse failure, so callers can tell 'confirmed zero
-    real results' apart from 'could not check this run' and never crash the
-    run either way -- same graceful-degradation contract as
+    real, valid result (an element that genuinely isn't a UniProt-recognized
+    microbe, or a real organism with zero KW-0843-tagged entries) and is
+    cached exactly like a non-empty one. Returns None (never an empty list)
+    only on a genuine network/parse failure, so callers can tell 'confirmed
+    zero real results' apart from 'could not check this run' and never crash
+    the run either way -- same graceful-degradation contract as
     _fetch_uniprot_function above. Cached permanently to disk
     (UNIPROT_VIRULENCE_CACHE_DIR, same convention as UNIPROT_CACHE_DIR/
     CL_CACHE_DIR elsewhere in this file) -- KW-0843 tagging for a given
-    taxon doesn't change run to run, so repeated pipeline runs over the
-    same organisms skip the live network call entirely after the first
+    organism doesn't change run to run, so repeated pipeline runs over the
+    same element names skip the live network call entirely after the first
     time. UNIPROT_VIRULENCE_CACHE_DIR was renamed (v2 suffix) when the
     go_terms field was added, specifically so any pre-existing 3-field
     cache file from before this field existed can never be silently read
     back as if it already had a (missing) go_terms key -- old cache files
     under the old dir name are simply never looked at again, not migrated."""
-    tid = str(taxid or "").strip()
-    if not tid or tid.lower() == "nan":
+    organism = str(organism or "").strip()
+    if not organism or organism.lower() == "nan":
         return None
-    cache_file = UNIPROT_VIRULENCE_CACHE_DIR / f"{tid}.json"
+    cache_key = _organism_cache_key(organism)
+    cache_file = UNIPROT_VIRULENCE_CACHE_DIR / f"{cache_key}.json"
     if cache_file.exists():
         try:
             cached = json.loads(cache_file.read_text(encoding="utf-8"))
@@ -2800,18 +2770,17 @@ def _fetch_uniprot_virulence_proteins(taxid: str, organism: str = "") -> list:
         except Exception:
             pass  # corrupt cache file -- fall through and refetch
 
-    query = f"(keyword:{UNIPROT_VIRULENCE_KEYWORD}) AND (taxonomy_id:{tid})"
+    query = f'(keyword:{UNIPROT_VIRULENCE_KEYWORD}) AND (organism_name:"{organism}")'
     params = {"query": query, "fields": "protein_name,accession,cc_function,go_f", "format": "tsv"}
     url = f"https://rest.uniprot.org/uniprotkb/search?{urllib.parse.urlencode(params)}"
-    print(f"UniProt virulence search: querying KW-0843 x taxonomy_id:{tid} "
-          f"({organism or 'unknown organism'})...")
+    print(f"UniProt virulence search: querying KW-0843 x organism_name:\"{organism}\"...")
     try:
         req = urllib.request.Request(url, headers={"Accept": "text/plain"})
         with urllib.request.urlopen(req, timeout=20) as resp:
             raw = resp.read().decode("utf-8")
     except Exception as e:
-        print(f"UniProt virulence search failed for taxonomy_id:{tid} "
-              f"({organism or 'unknown organism'}) ({e}); skipping this organism's virulence layer.")
+        print(f"UniProt virulence search failed for organism \"{organism}\" "
+              f"({e}); skipping this element's virulence layer.")
         return None
 
     lines = raw.splitlines()
@@ -2821,7 +2790,7 @@ def _fetch_uniprot_virulence_proteins(taxid: str, organism: str = "") -> list:
         # -- its absence means this wasn't the real TSV response (same
         # "don't cache a malformed response" guard _fetch_uniprot_function
         # uses for a missing primaryAccession above).
-        print(f"UniProt virulence search for taxonomy_id:{tid} returned an unexpected/malformed "
+        print(f"UniProt virulence search for organism \"{organism}\" returned an unexpected/malformed "
               f"response (not the expected TSV header) -- not caching, will retry next run.")
         return None
 
@@ -2846,17 +2815,21 @@ def _fetch_uniprot_virulence_proteins(taxid: str, organism: str = "") -> list:
         cache_file.write_text(json.dumps(records), encoding="utf-8")
     except Exception:
         pass
-    print(f"UniProt virulence search: taxonomy_id:{tid} ({organism or 'unknown organism'}) -> "
+    print(f"UniProt virulence search: organism \"{organism}\" -> "
           f"{len(records)} real KW-0843-tagged entr{'y' if len(records) == 1 else 'ies'}.")
     return records
 
 def find_uniprot_virulence_mentions(elements) -> list:
-    """For each Table3 element that is a real microbe with a known NCBI
-    Taxonomy ID (organism_taxonomy_ids.csv, see _load_organism_taxonomy_ids),
-    live-queries UniProt's own KW-0843 ("Virulence" keyword) search for
-    every real curated protein entry UniProt itself has tagged as a
-    virulence factor for that exact taxon (see
-    _fetch_uniprot_virulence_proteins). One dict per real matched UniProt
+    """For every Table3 element, live-queries UniProt's own KW-0843
+    ("Virulence" keyword) search for every real curated protein entry
+    UniProt itself has tagged as a virulence factor for that exact element
+    name, matched via UniProt's own organism_name free-text field (see
+    _fetch_uniprot_virulence_proteins). There is no pre-filter deciding
+    which elements are "real microbes" -- every element is queried by the
+    name the user typed, and a non-microbe element (a cytokine, a cell
+    type) or an organism name UniProt doesn't recognize simply comes back
+    with zero hits, never an error; it is up to the user to type the
+    organism name UniProt itself recognizes. One dict per real matched UniProt
     entry, with keys: Source (organism element name), Target (protein
     name), Accession (real UniProt accession -- this row's own citable ID,
     same _KB_EDGE_ID_FIELD['UniProt'] convention find_uniprot_function_
@@ -2893,15 +2866,11 @@ def find_uniprot_virulence_mentions(elements) -> list:
     *type*); the separate description/evidence *text* shown alongside it is
     what the new LLM call above produces from Function_Text/GO_Terms."""
     elements = [str(e).strip() for e in elements if str(e).strip()]
-    tax_map = _load_organism_taxonomy_ids()
-    if not tax_map or not elements:
+    if not elements:
         return []
     edges = []
     for elem in elements:
-        taxid = tax_map.get(elem)
-        if not taxid:
-            continue
-        records = _fetch_uniprot_virulence_proteins(taxid, elem)
+        records = _fetch_uniprot_virulence_proteins(elem)
         if not records:
             continue
         for r in records:
@@ -2915,16 +2884,17 @@ def find_uniprot_virulence_mentions(elements) -> list:
                 "Relationship": VIRULENCE_RELATION_LABEL,
                 "Function_Text": r.get("function_text", ""),
                 "GO_Terms": r.get("go_terms", ""),
-                "Source_DB": f"UniProt (keyword search, KW-0843 x taxonomy_id:{taxid})",
+                "Source_DB": f"UniProt (keyword search, KW-0843 x organism_name:\"{elem}\")",
                 "_is_virulence_edge": True,
             })
     return edges
 
 
 # ─────────────────── Microbe taxonomy (MiMeDB) ──────────────────────────────
-# MiMeDB is not used by this pipeline. Microbe detection for the Table 3
-# knowledge graph uses organism_taxonomy_ids.csv instead (see
-# build_table3_knowledge_graph), the same taxonomy source
+# MiMeDB is not used by this pipeline. There is no separate curated
+# taxonomy file either -- microbe detection for the Table 3 knowledge graph
+# is derived structurally from that sample's own UniProt-virulence edges
+# (see build_table3_knowledge_graph), the same UniProt organism_name search
 # find_uniprot_virulence_mentions already uses.
 
 # ─────────────────── KB citation ID lookups ─────────────────────────────────
@@ -3977,10 +3947,10 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
         curated UniProt FUNCTION text (both Tier 1 -- other master-list
         elements -- and Tier 2 -- external ImmPort-registry gene symbols
         -- are included; both are real).
-      - find_uniprot_virulence_mentions(elements): each real microbe
-        element's own UniProt-curated virulence proteins (UniProt keyword
-        KW-0843, matched by that organism's real NCBI Taxonomy ID -- see
-        that function's own docstring). Still tagged "UniProt" (same
+      - find_uniprot_virulence_mentions(elements): each element's own
+        UniProt-curated virulence proteins (UniProt keyword KW-0843,
+        matched by that element's name via UniProt's own organism_name
+        search -- see that function's own docstring). Still tagged "UniProt" (same
         Evidence Source / _KB_EDGE_ID_FIELD as the co-mention edges above),
         but structurally distinct and NOT run through
         _label_uniprot_relations_via_llm -- see below. Its Relationship
@@ -4050,8 +4020,8 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
     for e in uniprot_edges:
         raw_edges.append(("UniProt", e))
 
-    # Virulence-protein edges (UniProt keyword KW-0843 x each microbe
-    # element's real NCBI Taxonomy ID -- see find_uniprot_virulence_
+    # Virulence-protein edges (UniProt keyword KW-0843 x each element's own
+    # name via UniProt's organism_name search -- see find_uniprot_virulence_
     # mentions) are a second, structurally distinct UniProt-sourced layer.
     # Tagged with the same "UniProt" source_name as the co-mention edges
     # above -- so Evidence Source/_KB_EDGE_ID_FIELD/dedupe below all work
@@ -4452,10 +4422,12 @@ def build_table3_knowledge_graph(sample: str, table3_df: pd.DataFrame, obs_df: p
     independent piece of evidence exists for that pair.
 
     Node shape (real-data typed, never guessed): hexagon = ImmPort-
-    registry-matched cytokine/protein, box = microbe (matched against
-    organism_taxonomy_ids.csv's user-verified NCBI Taxonomy ID map),
-    ellipse (default) = anything else (immune cell, etc.), note (light
-    yellow) = a virulence protein's real Function phrase, drawn as its
+    registry-matched cytokine/protein, box = microbe (derived structurally
+    from this sample's own UniProt-virulence edges below -- any node that
+    is a Source of a real KW-0843 virulence edge is, by construction, the
+    microbe UniProt matched that element name to; no separate taxonomy
+    file involved), ellipse (default) = anything else (immune cell, etc.),
+    note (light yellow) = a virulence protein's real Function phrase, drawn as its
     own downstream node -- see below. Node fill color: green = Observed
     Shift 1 (increase), skyblue = Observed Shift -1 (decrease), white =
     not found in this sample's observed-shift CSV (also the default for
@@ -4561,6 +4533,11 @@ def build_table3_knowledge_graph(sample: str, table3_df: pd.DataFrame, obs_df: p
     # never used by the separate protein/cytokine co-mention UniProt
     # layer, so this never fires for non-microbe rows.
     function_nodes = set()  # real per-edge Function phrase nodes, virulence-only
+    # Every virulence edge's Source is, by construction, the microbe UniProt
+    # matched that element name to (see the branch below) -- collecting
+    # those Sources here is what lets node_shape() draw microbes as boxes
+    # without a separate taxonomy file.
+    microbe_nodes = set()
     for _, row in table3_df.iterrows():
         src = str(row.get("Element A", "")).strip()
         tgt = str(row.get("Element B", "")).strip()
@@ -4585,6 +4562,7 @@ def build_table3_knowledge_graph(sample: str, table3_df: pd.DataFrame, obs_df: p
             # longer needs to carry the distinguishing Function text,
             # since that now lives on its own downstream node.
             edge_specs.append((src, tgt, "virulence factor"))
+            microbe_nodes.add(src)
             # Protein -> Function edge: the real, per-edge Functions
             # phrase (Table 3's own Supporting Evidence column,
             # LLM-authored -- see _virulence_graph_label's docstring)
@@ -4604,13 +4582,12 @@ def build_table3_knowledge_graph(sample: str, table3_df: pd.DataFrame, obs_df: p
 
     # Real-data node typing, same lookups build_table2_coshift already uses.
     gene_info = find_gene_identity_info(list(nodes), SAMPLE_MODEL)
-    # Microbe detection for node shape: organism_taxonomy_ids.csv (the
-    # same user-verified NCBI Taxonomy ID map find_uniprot_virulence_
-    # mentions uses).
-    taxonomy_ids = _load_organism_taxonomy_ids()
+    # Microbe detection for node shape: derived structurally from
+    # microbe_nodes (collected above, from this sample's own UniProt-
+    # virulence edges) -- no separate taxonomy file involved.
 
     def node_shape(name: str) -> str:
-        if name in taxonomy_ids:
+        if name in microbe_nodes:
             return "box"        # microbe
         if name in gene_info:
             return "hexagon"    # cytokine/protein
