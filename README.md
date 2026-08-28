@@ -160,7 +160,8 @@ Go to the working directory.
 
 E.g.
 
-<img width="667" height="72" alt="image" src="https://github.com/user-attachments/assets/2273c67a-2fce-4d40-913d-da4eeec0b033" />
+<img width="911" height="126" alt="image" src="https://github.com/user-attachments/assets/b009626c-0b7b-4789-8693-9ecc540c1d55" />
+
 
 
 ```
