@@ -1,0 +1,28 @@
+Element,Evidence for Up,Evidence for Down,Evidence for Mixed,Observed Shift,Total Abstracts Screened,Detected Directional Evidence (Citations),Total Abstract Support,% Support with Observed Shift,Total Runs
+MMP-8,PMID:38786309 (2 runs); PMID:23174014 (3 runs); PMID:29472810 (3 runs); PMID:33658891 (3 runs); PMID:39278722 (2 runs); PMID:28921659 (3 runs); PMID:37042710 (3 runs); PMID:38356138 (2 runs); PMID:38086426 (1 runs); PMID:42662054 (1 runs); PMID:39597886 (1 runs); PMID:35368315 (1 runs),PMID:38055628 (3 runs); PMID:33383828 (3 runs); PMID:25741581 (3 runs); PMID:41913520 (2 runs),,1,50,16,12,75%,3
+MIP-1D,,,,1,1,0,N/A,N/A,3
+EGF,PMID:11712432 (1 runs),PMID:36981618 (1 runs),,1,7,2,1,50%,3
+PDGF,PMID:11712432 (1 runs),,,1,8,1,1,100%,3
+IL-1α,,PMID:24944641 (1 runs),,1,11,1,0,0%,3
+IL-1β,PMID:23174014 (3 runs); PMID:29472810 (3 runs); PMID:32618013 (3 runs); PMID:24843315 (1 runs); PMID:39278722 (3 runs); PMID:36981618 (3 runs); PMID:37042710 (3 runs); PMID:38356138 (2 runs); PMID:38086426 (1 runs); PMID:38786309 (1 runs); PMID:40289477 (1 runs); PMID:42662054 (1 runs); PMID:31849924 (1 runs),PMID:33383828 (3 runs); PMID:36322996 (3 runs); PMID:25741581 (3 runs); PMID:33685682 (2 runs); PMID:41913520 (3 runs); PMID:34129722 (2 runs); PMID:38055628 (1 runs); PMID:24944641 (1 runs),PMID:33658891 (2 runs),1,76,22,13,59%,3
+GDF-15,,PMID:37605193 (3 runs),PMID:28453865 (3 runs),1,3,2,0,0%,3
+B-cell,PMID:42234235 (2 runs); PMID:31849924 (1 runs); PMID:38616555 (3 runs); PMID:34129722 (3 runs); PMID:38088123 (1 runs),,,-1,15,5,0,0%,3
+Anaeroglobus geminatus,PMID:32737880 (3 runs); PMID:28667274 (3 runs); PMID:37572051 (1 runs),,PMID:22576262 (1 runs),1,5,4,3,75%,3
+Bacteroidetes bacterium oral taxon 272,,,,1,1,0,N/A,N/A,3
+Brevundimonas diminuta,,,,1,1,0,N/A,N/A,3
+Dialister invisus,PMID:37572051 (1 runs),PMID:42076937 (1 runs),,1,3,2,1,50%,3
+Dialister micraerophilus,,,,1,0,0,N/A,N/A,3
+Eggerthia catenaformis,PMID:41561215 (2 runs); PMID:38146388 (2 runs); PMID:37003537 (1 runs),,,1,3,3,3,100%,3
+Fusobacteria bacterium oral taxon 220,,,,1,0,0,N/A,N/A,3
+Fusobacterium naviforme,PMID:33117738 (2 runs),,,1,5,1,1,100%,3
+Lactobacillus paracasei,PMID:39130668 (2 runs); PMID:37078410 (2 runs); PMID:29649103 (1 runs),,,1,7,3,3,100%,3
+Lactobacillus rhamnosus,PMID:42076937 (1 runs); PMID:37799895 (2 runs); PMID:36322996 (1 runs),,,1,9,3,3,100%,3
+Leptotrichia wadei,PMID:40422634 (1 runs),,,1,3,1,1,100%,3
+Streptococcus constellatus,PMID:9495612 (1 runs); PMID:37140235 (1 runs); PMID:37003537 (1 runs),,,1,7,3,3,100%,3
+Streptococcus mitis,PMID:36416468 (1 runs); PMID:20555421 (1 runs),,PMID:30099741 (2 runs),1,10,3,2,67%,3
+Streptococcus salivarius,PMID:36416468 (1 runs),,,1,7,1,1,100%,3
+Streptococcus sanguinis,PMID:36416468 (3 runs); PMID:20555421 (1 runs),PMID:19722792 (2 runs),,1,12,3,2,67%,3
+Streptococcus sp. oral taxon 064,,,,1,0,0,N/A,N/A,3
+Veillonella atypica,PMID:39688114 (3 runs); PMID:25880819 (1 runs),,,1,5,2,2,100%,3
+Xanthomonas sp. oral taxon 037,,,,1,0,0,N/A,N/A,3
+Lactobacillus panis,,,,-1,0,0,N/A,N/A,3

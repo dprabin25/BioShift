@@ -1,0 +1,88 @@
+PMID or Knowledge Base ID,Evidence Source,Element A,Relation,Element B,Supporting Evidence
+40136726,PubMed,IL-1B,activates,Porphyromonas gingivalis,"“The pathogenesis of PD involves the activation of immune cells and the release of pro-inflammatory cytokines (such as IL-1, IL-6...)”"
+40136726,PubMed,IL-6,activates,Porphyromonas gingivalis,"“The pathogenesis of PD involves the activation of immune cells and the release of pro-inflammatory cytokines (such as IL-1, IL-6...)”"
+40136726,PubMed,IL-1B,activates,Tannerella forsythia,"“The pathogenesis of PD involves the activation of immune cells and the release of pro-inflammatory cytokines (such as IL-1, IL-6...)”"
+40136726,PubMed,IL-6,activates,Tannerella forsythia,"“The pathogenesis of PD involves the activation of immune cells and the release of pro-inflammatory cytokines (such as IL-1, IL-6...)”"
+37513004,PubMed,Porphyromonas gingivalis,induces,Treponema denticola,"“These pathogens elicit the release of cytokines, which in combination with their virulence factors induce chronic systemic inflammation”"
+37513004,PubMed,Treponema denticola,induces,Porphyromonas gingivalis,"“These pathogens elicit the release of cytokines, which in combination with their virulence factors induce chronic systemic inflammation”"
+40722812,PubMed,Porphyromonas gingivalis,promotes,Tannerella forsythia,"“These pathobionts contribute to respiratory diseases by facilitating pathogen adhesion, inducing epithelial cell apoptosis, and promoting inflammation.”"
+40722812,PubMed,Treponema denticola,promotes,Tannerella forsythia,"“These pathobionts contribute to respiratory diseases by facilitating pathogen adhesion, inducing epithelial cell apoptosis, and promoting inflammation.”"
+26221929,PubMed,Porphyromonas gingivalis,induces,Tannerella forsythia,"“...trigger innate, inflammatory, and adaptive immune responses.”"
+26221929,PubMed,Treponema denticola,induces,Tannerella forsythia,"“...trigger innate, inflammatory, and adaptive immune responses.”"
+35282488,PubMed,Porphyromonas gingivalis,associated with,Tannerella forsythia,“...these specific pathogens can be easily translocated from oral cavity to the intestine... and lead to the creation of inflammatory mediators through which they may influence each other.”
+35282488,PubMed,Treponema denticola,associated with,Tannerella forsythia,“...these specific pathogens can be easily translocated from oral cavity to the intestine... and lead to the creation of inflammatory mediators through which they may influence each other.”
+24741603,PubMed,Porphyromonas gingivalis,involved in,Tannerella forsythia,“Porphyromonas gingivalis is a Gram-negative oral anaerobe that is involved in the pathogenesis of periodontitis”
+24741603,PubMed,Treponema denticola,involved in,Tannerella forsythia,“Porphyromonas gingivalis is a Gram-negative oral anaerobe that is involved in the pathogenesis of periodontitis”
+41753333,PubMed,IL-1A,activates,Porphyromonas gingivalis,“The IL-1A CC genotype significantly increased the odds of P. gingivalis”
+41753333,PubMed,IL-1B,induces,Tannerella forsythia,“The IL-1B CC genotype was independently associated with T. forsythia”
+36312320,PubMed,IL-6,induces,Th17,“OMVs of P. gingivalis and T. denticola induced the differentiation of Th17 cells”
+16153871,PubMed,IL-6,secretes,Porphyromonas gingivalis,"“P. gingivalis, T. denticola, and T. forsythia may induce high levels of pro-inflammatory mediators”"
+16153871,PubMed,IL-6,secretes,Treponema denticola,"“P. gingivalis, T. denticola, and T. forsythia may induce high levels of pro-inflammatory mediators”"
+16153871,PubMed,IL-6,secretes,Tannerella forsythia,"“P. gingivalis, T. denticola, and T. forsythia may induce high levels of pro-inflammatory mediators”"
+19162208,PubMed,IL-6,secretes,Porphyromonas gingivalis,“mixed infection with P. gingivalis and either T. forsythia or T. denticola acted synergistically to increase IL-6 production”
+19162208,PubMed,IL-6,secretes,Treponema denticola,“mixed infection with P. gingivalis and either T. forsythia or T. denticola acted synergistically to increase IL-6 production”
+19162208,PubMed,IL-6,secretes,Tannerella forsythia,“mixed infection with P. gingivalis and either T. forsythia or T. denticola acted synergistically to increase IL-6 production”
+40008712,PubMed,IL-1B,increased expression of,Porphyromonas gingivalis,“increased expression of Il-1b”
+40627761,PubMed,Porphyromonas gingivalis,associated with,Treponema denticola,“Significant positive associations were found between oPMN level and the detection of Pg”
+23990979,PubMed,Porphyromonas gingivalis,synergistic biofilm formation with,Treponema denticola,“a strong synergy was observed between P. gingivalis and T. denticola in polymicrobial biofilm formation”
+10599909,PubMed,IL-1B,associated with,Porphyromonas gingivalis,“carried the IL-1 haplotype”
+31356381,PubMed,Porphyromonas gingivalis,associated with,Treponema denticola,“immune reactions following infection by periodontal bacteria might cross-react with RA autoantigens”
+25713575,PubMed,Porphyromonas gingivalis,associated with,Tannerella forsythia,"“bacterial pathogens commonly associated with periodontal disease are... Porphyromonas gingivalis, Tannerella forsythia, and Treponema denticola”"
+41226590,PubMed,Porphyromonas gingivalis,associated with,Treponema denticola,"“key periodontal pathogens implicated in disease pathogenesis include Porphyromonas gingivalis, Treponema denticola, Tannerella forsythia”"
+31517596,PubMed,Porphyromonas gingivalis,associated with,Treponema denticola,“SiaPG and P. gingivalis was inhibited using the commercially available chemotherapeutic zanamivir”
+41364164,PubMed,Porphyromonas gingivalis,associated with,Tannerella forsythia,"“Porphyromonas gingivalis, Tannerella forsythia, and Treponema denticola are key bacterial risk factors for periodontitis”"
+41364164,PubMed,Porphyromonas gingivalis,associated with,Treponema denticola,"“Porphyromonas gingivalis, Tannerella forsythia, and Treponema denticola are key bacterial risk factors for periodontitis”"
+24554879,PubMed,Porphyromonas gingivalis,correlated with,Tannerella forsythia,“These bacteria correlated with the severity of periodontal destruction”
+24554879,PubMed,Porphyromonas gingivalis,correlated with,Treponema denticola,“These bacteria correlated with the severity of periodontal destruction”
+37288705,PubMed,Porphyromonas gingivalis,associated with,Treponema denticola,“revealed an association between periodontitis and oral microbes”
+26194628,PubMed,Porphyromonas gingivalis,Correlates with,IL-1B,“High cortisol levels showed a positive significant correlation with P. gingivalis”
+36312320,PubMed,Porphyromonas gingivalis,induced,Th17,“OMVs of P. gingivalis and T. denticola induced the differentiation of Th17 cells.”
+36312320,PubMed,Treponema denticola,induced,Th17,“OMVs of P. gingivalis and T. denticola induced the differentiation of Th17 cells.”
+19162208,PubMed,Porphyromonas gingivalis,acted synergistically to increase,IL-6,“Mixed infection with P. gingivalis and either T. forsythia or T. denticola acted synergistically to increase IL-6 production.”
+19162208,PubMed,Tannerella forsythia,acted synergistically to increase,IL-6,“Mixed infection with P. gingivalis and either T. forsythia or T. denticola acted synergistically to increase IL-6 production.”
+28497028,PubMed,Porphyromonas gingivalis,promoted,Th17,"“Gingipain-dependent induction of Th17 cells was highly specific, since other T cell-subsets remained unchanged.”"
+28497028,PubMed,Porphyromonas gingivalis,promoted,IL-6,"“Gingipain-dependent induction of Th17 cells was highly specific, since other T cell-subsets remained unchanged.”"
+40136726,PubMed,Porphyromonas gingivalis,induces,IL-1B,"“...the release of pro-inflammatory cytokines (such as IL-1, IL-6, TNF-α, and PGE2)...”"
+40136726,PubMed,Porphyromonas gingivalis,induces,IL-6,"“...the release of pro-inflammatory cytokines (such as IL-1, IL-6, TNF-α, and PGE2)...”"
+40136726,PubMed,Porphyromonas gingivalis,activates,Tannerella forsythia,"“...the release of pro-inflammatory cytokines (such as IL-1, IL-6, TNF-α, and PGE2)...”"
+40136726,PubMed,Porphyromonas gingivalis,activates,Treponema denticola,"“...the release of pro-inflammatory cytokines (such as IL-1, IL-6, TNF-α, and PGE2)...”"
+40136726,PubMed,Tannerella forsythia,induces,IL-1B,"“...the release of pro-inflammatory cytokines (such as IL-1, IL-6, TNF-α, and PGE2)...”"
+40136726,PubMed,Tannerella forsythia,induces,IL-6,"“...the release of pro-inflammatory cytokines (such as IL-1, IL-6, TNF-α, and PGE2)...”"
+40136726,PubMed,Treponema denticola,induces,IL-1B,"“...the release of pro-inflammatory cytokines (such as IL-1, IL-6, TNF-α, and PGE2)...”"
+40136726,PubMed,Treponema denticola,induces,IL-6,"“...the release of pro-inflammatory cytokines (such as IL-1, IL-6, TNF-α, and PGE2)...”"
+37513004,PubMed,Porphyromonas gingivalis,associated with,Tannerella forsythia,“...20 showed some degree of positive correlation between periodontal disease and neurodegenerative disorders...”
+37513004,PubMed,Treponema denticola,associated with,Tannerella forsythia,“...20 showed some degree of positive correlation between periodontal disease and neurodegenerative disorders...”
+40008712,PubMed,IL-1B,activates,IL-6,"“increased expression of Il-1b, Il-6”"
+31356381,PubMed,Porphyromonas gingivalis,cross-reacts with,Tannerella forsythia,“immune reactions following infection by periodontal bacteria might cross-react”
+42306532,PubMed,Porphyromonas gingivalis,associated with,Treponema denticola,"“the relative expression of red complex bacteria-Porphyromonas gingivalis (Pg), Treponema denticola (Td)”"
+42306532,PubMed,Porphyromonas gingivalis,associated with,Tannerella forsythia,"“the relative expression of red complex bacteria-Porphyromonas gingivalis (Pg), Tannerella forsythia (Tf)”"
+41155306,PubMed,Porphyromonas gingivalis,associates with,Tannerella forsythia,"“Porphyromonas gingivalis, Tannerella forsythia, and Treponema denticola are key bacterial risk factors for periodontitis”"
+41155306,PubMed,Porphyromonas gingivalis,associates with,Treponema denticola,"“Porphyromonas gingivalis, Tannerella forsythia, and Treponema denticola are key bacterial risk factors for periodontitis”"
+36839184,PubMed,Porphyromonas gingivalis,associates with,Tannerella forsythia,“Dysbiosis of the subgingival microbiota in obese and overweight individuals was associated with increased prevalence and severity of periodontal disease”
+36839184,PubMed,Porphyromonas gingivalis,associates with,Treponema denticola,“Dysbiosis of the subgingival microbiota in obese and overweight individuals was associated with increased prevalence and severity of periodontal disease”
+36312320,PubMed,Th17,Induces,Porphyromonas gingivalis,“OMVs of P. gingivalis and T. denticola induced the differentiation of Th17 cells”
+20331798,PubMed,IL-6,Induces,Porphyromonas gingivalis,“Mono and mixed challenges with whole bacterial cells or LPS induced the secretion of high amounts of IL-6”
+20331798,PubMed,IL-6,Induces,Treponema denticola,“Mono and mixed challenges with whole bacterial cells or LPS induced the secretion of high amounts of IL-6”
+24683190,PubMed,Th17,Correlates with,Porphyromonas gingivalis,“IL-17 production was significantly correlated with periodontal disease-induced IL-6”
+11073323,PubMed,IL-1B,Associates with,Porphyromonas gingivalis,“Polymorphisms in the cluster of IL-1 genes have been significantly associated with the severity of adult periodontitis”
+40136726,PubMed,IL-6,secretes,Treponema denticola,"“release of pro-inflammatory cytokines (such as IL-1, IL-6, TNF-α)”"
+35282488,PubMed,Porphyromonas gingivalis,associates with,Treponema denticola,“lead to the creation of inflammatory mediators”
+28611978,PubMed,Porphyromonas gingivalis,correlates with,Tannerella forsythia,“major pathogens responsible for chronic periodontitis”
+28611978,PubMed,Porphyromonas gingivalis,correlates with,Treponema denticola,“major pathogens responsible for chronic periodontitis”
+40136726,PubMed,Treponema denticola,activates,Tannerella forsythia,“Periodontal pathogens trigger endothelial oxidative stress and systemic inflammation via Toll-like receptors (TLRs)”
+40008712,PubMed,IL-6,increased expression of,Porphyromonas gingivalis,“increased expression of Il-6”
+42306532,PubMed,Treponema denticola,increased expression of,Tannerella forsythia,“All biomarker levels were significantly increased in the periodontitis+RA group compared to periodontitis group”
+26600627,PubMed,Porphyromonas gingivalis,co-infects with,Treponema denticola,"“A high correlation (p= 0.000) was found among P. gingivalis, T. denticola, and T. forsythia co-infection”"
+25152229,PubMed,Treponema denticola,involved in,Tannerella forsythia,“coaggregation between Treponema denticola and Tannerella forsythia”
+25152229,PubMed,Porphyromonas gingivalis,involved in,Treponema denticola,“co-isolated with high frequency from chronic periodontitis lesions”
+25152229,PubMed,Porphyromonas gingivalis,involved in,Tannerella forsythia,“co-isolated with high frequency from chronic periodontitis lesions”
+25152229,PubMed,Tannerella forsythia,involved in,Treponema denticola,“co-isolated with high frequency from chronic periodontitis lesions”
+CL_0000235,ImmuneXpresso,macrophage,cell-cytokine interaction (Positive),IL-1B,"record [CL_0000235, IL-1B]: 122 paper(s), enrichment score 5.62"
+CL_0000576,ImmuneXpresso,monocyte,cell-cytokine interaction (Positive),IL-1B,"record [CL_0000576, IL-1B]: 87 paper(s), enrichment score 6.2"
+CL_0000138,ImmuneXpresso,IL-1B,cell-cytokine interaction (Positive),chondrocyte,"record [CL_0000138, IL-1B]: 38 paper(s), enrichment score 11.47"
+CL_0000235,ImmuneXpresso,macrophage,cell-cytokine interaction (Positive),IL-6,"record [CL_0000235, IL-6]: 103 paper(s), enrichment score 2.55"
+CL_0000576,ImmuneXpresso,monocyte,cell-cytokine interaction (Positive),IL-6,"record [CL_0000576, IL-6]: 87 paper(s), enrichment score 3.49"
+CL_0000057,ImmuneXpresso,fibroblast,cell-cytokine interaction (Positive),IL-6,"record [CL_0000057, IL-6]: 63 paper(s), enrichment score 4.85"
+CL_0000312,ImmuneXpresso,keratinocyte,cell-cytokine interaction (Positive),IL-1A,"record [CL_0000312, IL-1A]: 19 paper(s), enrichment score 26.56"
+CL_0000235,ImmuneXpresso,macrophage,cell-cytokine interaction (Positive),IL-1A,"record [CL_0000235, IL-1A]: 18 paper(s), enrichment score 4"
+CL_0000576,ImmuneXpresso,monocyte,cell-cytokine interaction (Positive),IL-1A,"record [CL_0000576, IL-1A]: 13 paper(s), enrichment score 4.85"

@@ -1,0 +1,87 @@
+Biological Relationship Name,PMID or Knowledge Base ID,Evidence Source,List of Elements,Quoted Evidence
+Dendritic cells recruited by neutrophils,35244951,PubMed,Neutrophils; Dendritic cells; Macrophages,"“Chemokines and cytokines are released that attract macrophages, dendritic cells, and T cells to the site.”"
+Dendritic cells activated by IL-1B,35335652,PubMed,Dendritic cells; IL-1B,“Invasion of Dendritic Cells by Porphyromonas gingivalis Disrupts DC Maturation and Depolarizes the T-Cell-Mediated Immune Response.”
+Macrophages recruited by neutrophils,36356944,PubMed,Macrophages; Neutrophils,“EA also suppressed the infiltration of macrophages and neutrophils...”
+Neutrophils secreting IL-8,26055820,PubMed,Neutrophils; IL-8; IL-6,"“Pro-inflammatory cytokine release (IL-8, IL-6, TNF-α, IL-1β) by peripheral blood neutrophils...”"
+Macrophages secreting IL-1B,36800026,PubMed,Macrophages; IL-1B; IL-6; IL-8,"“release of different cytokines (IL-1β, TNF-α, IL-6, IL-8, IL-10, and IL-12p70) by THP-1 cells induced to differentiate into osteoclasts.”"
+Inhibits IL-8 production,41742464,PubMed,IL-6; IL-8; Macrophages,"“DKB140 inhibited inflammatory cytokine (IL-6, IL-8, and IL-1β) production”"
+Induces IL-8 production,39936030,PubMed,IL-8; Neutrophils,“gingipains play a significant role in the disruption of immune cell functions via the induction of reactive oxygen species and inactivation of neutrophil elastase activity”
+IL-1B secretion induced by P. gingivalis,17888725,PubMed,IL-1B; Macrophages,“leukotoxin causes activation of caspase-1 and abundant secretion of bio-active IL-1beta from human macrophages”
+IL-1B production in macrophages,16498070,PubMed,IL-1B; Macrophages,“the cranberry fraction was a potent inhibitor of the pro-inflammatory cytokine and chemokine responses induced by LPS”
+"IL-1B, IL-6, IL-8 production by macrophages",40865715,PubMed,IL-1B; IL-6; IL-8; Macrophages,“significant reduction in IL-17 levels on 60 and 90 days”
+"IL-6, IL-8 production in macrophages",41221328,PubMed,IL-6; IL-8; Macrophages,“Ibrutinib and R406 suppressed Pg infection-induced activation of the NLRP3-dependent pyroptosis pathway and IL-1β secretion in hMDMs”
+"IL-6, IL-8 production by macrophages",31179464,PubMed,IL-6; IL-8; Macrophages,"“the bacterium-enhanced expression of IL-6, IL-1β, and TNFα in THP-1 macrophages was alleviated”"
+"IL-6, IL-8 production in co-culture model",15811635,PubMed,IL-6; IL-8; Macrophages,“P. gingivalis cells stimulated the secretion of pro-inflammatory cytokines (IL-1beta and IL-6) and chemokines (IL-8 and RANTES)”
+IL-6 and IL-8 production by macrophages,32149126,PubMed,IL-6; IL-8; Macrophages,“Expressions of IL-6 and RANKL were increased by treatment with S100A9”
+"IL-6, IL-8 production associated with neutrophils",11759866,PubMed,IL-6; IL-8; Neutrophils,"“the strongest protein and mRNA expression of IL-8, ICAM-1, IL-1beta, and TNF-alpha were located in pocket epithelium and adjacent connective tissue with large numbers of infiltrating PMNs”"
+"Macrophages express IL-6, IL-8",1628899,PubMed,IL-6; IL-8; Macrophages,"“IL-6 mRNA were more widely distributed on many types of cells such as macrophages, T cells, fibroblasts, endothelial cells and B cells”"
+Activation of inflammatory processes,42042061,PubMed,Neutrophils; Macrophages; Dendritic cells,“Functional analysis of the upregulated DEGs revealed activation of inflammatory processes”
+Secretion of pro-inflammatory mediators,22563853,PubMed,IL-1B; IL-6; IL-8; Macrophages,"“AC-PACs and licochalcone A also acted in synergy to reduce the lipopolysaccharide (LPS)-induced secretion of the pro-inflammatory mediators IL-1β, TNF-α, IL-6 and IL-8”"
+Production of IL-6 and IL-8,17720859,PubMed,IL-6; IL-8; Macrophages,"“Hemoglobin and LPS from periodontopathogens acted in synergy to stimulate the production of high levels of IL-1beta, IL-6, IL-8, and TNF-alpha by macrophages”"
+Induction of IL-6 secretion,38146226,PubMed,IL-6; Neutrophils; Macrophages,“Dead cells elicited IL-6 secretion in HGF cells”
+Recruitment of neutrophils,18954353,PubMed,IL-8; Neutrophils,“the lack of IL-8 production is not explained by IL-8 degradation...may contribute to the pathogenesis of periodontitis by failing to trigger chemotaxis of neutrophils”
+Association with inflammatory response,39430742,PubMed,Neutrophils; Macrophages; Dendritic cells,"“the indirect role of the host immune response to T. gondii via natural killer cells, monocytes, macrophages, neutrophils, dendritic cells, T cells, and B cells also contributes to periodontal diseases”"
+Neutrophils regulate macrophages,38921449,PubMed,Neutrophils; Macrophages; Dendritic cells,"“Resolvins control dendritic cell migration and T cell responses, and they also reduce the pro-inflammatory cytokines...”"
+Neutrophils secrete IL-6,32763436,PubMed,IL-6; Neutrophils; Macrophages,“AZM brought about localized infiltration of neutrophils and M2 macrophages and advanced fibrosis”
+Neutrophils secrete IL-8,32763436,PubMed,IL-8; Neutrophils; Macrophages,“AZM brought about localized infiltration of neutrophils and M2 macrophages and advanced fibrosis”
+Macrophages secrete IL-6,40013015,PubMed,IL-6; Macrophages; IL-8,“the cell-free supernatants of these strains significantly reduced P. gingivalis-induced secretion of interleukins IL-6 and IL-8”
+Macrophages secrete IL-6,18205733,PubMed,IL-6; Macrophages,“this tolerance response was associated with increased secretion of interleukin-1 beta and matrix metalloproteinase 9”
+Macrophages secrete IL-8,18205733,PubMed,IL-8; Macrophages,“this tolerance response was associated with increased secretion of interleukin-1 beta and matrix metalloproteinase 9”
+Neutrophils secrete IL-6,27974831,PubMed,IL-6; Neutrophils; IL-8,“P. intermedia and T. forsythia adhere to and internalize into hDFSCs... an increase in IL-6 and IL-8 secretion”
+Activates neutrophils,38630168,PubMed,Neutrophils; Macrophages,“activate neutrophils and macrophages”
+Neutrophils exhibit cytokine hyper-reactivity,26055820,PubMed,Neutrophils; IL-6; IL-8; IL-1B,“These data demonstrate that chronic periodontitis is characterised by neutrophils that constitutively exhibit cytokine hyper-reactivity.”
+Dendritic cells secrete pro-inflammatory cytokines,35335652,PubMed,Dendritic cells; IL-1B; IL-6,"“This invasion process is tightly linked to the bridging functions of resultant DCs... inflammatory cytokines (e.g., IL-1b, TNFa, IL-6) are essential signals for antigen presentation.”"
+Recruits,39935835,PubMed,Neutrophils; Macrophages; Dendritic cells,"“...showing strong correlations with inflammation, particularly in... macrophages, dendritic cells, neutrophils...”"
+Induces,42042061,PubMed,Neutrophils; Macrophages,“...the activation of innate immunity manifests primarily at the level of signaling pathways...”
+Correlates,39935835,PubMed,Macrophages; IL-6,“...identified 145 markers correlated with ATG-guided phenotypes and inflammation...”
+Neutrophils regulate macrophage functions,38921449,PubMed,Neutrophils; Macrophages,“stimulating macrophage functions including phagocytosis”
+Macrophages secrete IL-8,42181479,PubMed,IL-8; Macrophages,“IL-8 secretion remained high”
+Activation of pyroptosis pathway,41221328,PubMed,IL-1B; Macrophages,“Ibrutinib and R406 suppressed Pg infection-induced activation of the NLRP3-dependent pyroptosis pathway and IL-1β secretion in hMDMs.”
+Cytokine response modulation,31179464,PubMed,IL-6; Macrophages,"“the bacterium-enhanced expression of IL-6, IL-1β, and TNFα in THP-1 macrophages was alleviated.”"
+Cytokine secretion modulation,15811635,PubMed,IL-1B; IL-6,“P. gingivalis cells stimulated the secretion of pro-inflammatory cytokines (IL-1beta and IL-6)”
+Cytokine secretion modulation,15811635,PubMed,IL-6; IL-8,“secretion of high levels of cytokines by these cells is believed to contribute to periodontal tissue destruction.”
+Cytokine production inhibition,16498070,PubMed,IL-1B; IL-6,“the cranberry fraction was a potent inhibitor of the pro-inflammatory cytokine and chemokine responses induced by LPS.”
+Cytokine production inhibition,40865715,PubMed,IL-1B; IL-6,“Both groups showed a significant reduction in IL-17 levels on 60 and 90 days.”
+Cytokine production induction,37900318,PubMed,IL-1B; IL-6; Macrophages,“the M1 subtype of macrophages was more abundant in the late-log OMVs and stationary OMVs groups which boosted the production of inflammatory cytokines more than pre-log OMVs.”
+Cytokine production induction,32149126,PubMed,IL-6; Neutrophils,“Calprotectin binds to RAGE and TLR4 and induces the expression of proinflammatory chemokines and cytokines.”
+Cytokine production induction,21513479,PubMed,IL-6; Neutrophils; IL-8,"“higher interleukin (IL)-1α, IL-6, IL-8, and tumor necrosis factor-α levels”"
+Cytokine production association,42403364,PubMed,IL-6; Neutrophils,"“persistent activation of nuclear factor kappa-B (NF-κB) and mitogen-activated protein kinase (MAPK) pathways further enhance osteoclast differentiation, survival, and resorptive activity.”"
+Cytokine production association,1628899,PubMed,IL-6; Macrophages,“suggested an involvement of cytokine network in the generation of human periodontitis.”
+Cytokine production association,39311693,PubMed,IL-6; Neutrophils,“we found both patients with periodontitis and patients with periodontitis and diabetes showed higher IL-17 levels and lower Del-1 levels compared with healthy subjects.”
+Correlates with neutrophil levels,37681356,PubMed,IL-6; Neutrophils,“Neutrophils in GCF exhibited a positive correlation with PPD (sum)”
+Induces IL-8 expression,20798974,PubMed,IL-8; Macrophages,“Oral Gram-negative bacteria elicited significantly greater IL-8 levels from macrophages”
+Induces IL-6 production,39936030,PubMed,IL-6; Neutrophils,“gingipains play a significant role in the disruption of immune cell functions via the induction of reactive oxygen species”
+Recruits neutrophils,39936030,PubMed,Neutrophils; Macrophages,“induction of reactive oxygen species and inactivation of neutrophil elastase activity”
+Dendritic cells express IL-6,35335652,PubMed,IL-6; Dendritic cells,“in that it can disable (or stimulate) the maturation function of DCs and cytokines that are secreted.”
+Macrophages express IL-1B,40008712,PubMed,IL-1B; Macrophages,“increased expression of Il-1b”
+Macrophages express IL-6,25866935,PubMed,IL-6; Macrophages,"“AM and iNOS were co-localized in particular cells within inflamed tissues, namely CD68(+) (52%) and CD14(+) (36%) macrophages”"
+Neutrophils express IL-1B,40008712,PubMed,IL-1B; Neutrophils,“increased expression of Il-1b”
+Macrophages secrete IL-6,22563853,PubMed,Macrophages; IL-6; IL-8,"“reduce the lipopolysaccharide (LPS)-induced secretion of the pro-inflammatory mediators IL-1β, TNF-α, IL-6 and IL-8”"
+"IL-1B, IL-6, IL-8 secreted by macrophages",17720859,PubMed,Macrophages; IL-1B; IL-6; IL-8,"“stimulate the production of high levels of IL-1beta, IL-6, IL-8, and tumor necrosis factor alpha (TNF-alpha) by macrophages”"
+Neutrophils associated with IL-6,27126447,PubMed,Neutrophils; IL-6; IL-8; Macrophages,"“higher secretion of IL-1β, IL-6, and KC (IL-8) by peritoneal macrophages”"
+Macrophages associated with IL-6,27126447,PubMed,Macrophages; IL-6; IL-8,"“higher secretion of IL-1β, IL-6, and KC (IL-8) by peritoneal macrophages”"
+Dendritic cells secrete IL-6,18328075,PubMed,Dendritic cells; IL-6; Macrophages,"“Toll-like receptors (TLRs) are a group of sensors on the surface of antigen-presenting cells, such as dendritic cells and macrophages, which recognize microbial pathogens and induce innate and adaptive immune responses”"
+Dendritic cells associated with macrophages,18328075,PubMed,Dendritic cells; Macrophages,"“Toll-like receptors (TLRs) are a group of sensors on the surface of antigen-presenting cells, such as dendritic cells and macrophages”"
+Neutrophils associated with Macrophages,25741691,PubMed,Neutrophils; Macrophages,“the LAD subgingival microbiome is distinct from that of health and Localized Aggressive Periodontitits”
+Parvimonas micra associated with Neutrophils,25741691,PubMed,Parvimonas micra; Neutrophils,“Select periodontitis-associated species in the LAD microbiome included Parvimonas micra”
+Parvimonas micra associated with Macrophages,25741691,PubMed,Parvimonas micra; Macrophages,“Select periodontitis-associated species in the LAD microbiome included Parvimonas micra”
+Neutrophils secrete IL-6,40013015,PubMed,IL-6; Neutrophils,“reduced P. gingivalis-induced secretion of interleukins IL-6”
+Neutrophils interact with macrophages,41065279,PubMed,Neutrophils; Macrophages,“neutrophils act as double-edged defenders”
+Neutrophils interact with dendritic cells,41065279,PubMed,Neutrophils; Dendritic cells,“neutrophils act as double-edged defenders”
+Macrophages are influenced by azithromycin,32763436,PubMed,Macrophages; Neutrophils,“AZM brought about localized infiltration of neutrophils and M2 macrophages”
+Stimulates IL-1β production,15811635,PubMed,IL-1B; Macrophages; IL-6; IL-8,“P. gingivalis cells stimulated the secretion of pro-inflammatory cytokines (IL-1beta and IL-6) and chemokines (IL-8 and RANTES) in the co-culture model.”
+Inhibits IL-1β production,40865715,PubMed,IL-1B; IL-6; IL-8,“Both groups showed a significant reduction in IL-17 levels on 60 and 90 days. The intergroup comparison has revealed no statistically significant differences.”
+Inhibits IL-6 production,40865715,PubMed,IL-6; IL-8,“Both groups showed a significant reduction in IL-17 levels on 60 and 90 days. The intergroup comparison has revealed no statistically significant differences.”
+Correlates with neutrophils,17888725,PubMed,IL-6; Neutrophils,“High levels of IL-beta correlated with a high proportion of A. actinomycetemcomitans in clinical samples from a patient with aggressive periodontitis.”
+Stimulates IL-6 production,32149126,PubMed,IL-6; Macrophages,“Expressions of IL-6 and RANKL were increased by treatment with S100A9 but not S100A8.”
+cell-cytokine interaction,CL_0000235,ImmuneXpresso,Macrophages; IL-1B,"record [CL_0000235, IL-1B]: 122 paper(s), enrichment score 5.62"
+cell-cytokine interaction,CL_0000235,ImmuneXpresso,Macrophages; IL-6,"record [CL_0000235, IL-6]: 103 paper(s), enrichment score 2.55"
+cell-cytokine interaction,CL_0000775,ImmuneXpresso,Neutrophils; IL-1B,"record [CL_0000775, IL-1B]: 24 paper(s), enrichment score 2.03"
+cell-cytokine interaction,CL_0000775,ImmuneXpresso,IL-6; Neutrophils,"record [CL_0000775, IL-6]: 21 paper(s), enrichment score 0.59"
+cell-cytokine interaction,CL_0000451,ImmuneXpresso,IL-6; Dendritic cells,"record [CL_0000451, IL-6]: 3 paper(s), enrichment score 0.5"
+cell-cytokine interaction,CL_0000235,ImmuneXpresso,macrophage; IL-1B,"record [CL_0000235, IL-1B]: 122 paper(s), enrichment score 5.62"
+cell-cytokine interaction,CL_0000576,ImmuneXpresso,monocyte; IL-1B,"record [CL_0000576, IL-1B]: 87 paper(s), enrichment score 6.2"
+cell-cytokine interaction,CL_0000138,ImmuneXpresso,IL-1B; chondrocyte,"record [CL_0000138, IL-1B]: 38 paper(s), enrichment score 11.47"
+cell-cytokine interaction,CL_0000235,ImmuneXpresso,macrophage; IL-6,"record [CL_0000235, IL-6]: 103 paper(s), enrichment score 2.55"
+cell-cytokine interaction,CL_0000576,ImmuneXpresso,monocyte; IL-6,"record [CL_0000576, IL-6]: 87 paper(s), enrichment score 3.49"
+cell-cytokine interaction,CL_0000057,ImmuneXpresso,fibroblast; IL-6,"record [CL_0000057, IL-6]: 63 paper(s), enrichment score 4.85"
