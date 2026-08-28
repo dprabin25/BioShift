@@ -190,6 +190,11 @@ Or on every sample currently in `ObservedShift/`:
 python BioShift.py --sample all --mode P123
 ```
 
+E.g.
+
+<img width="870" height="35" alt="image" src="https://github.com/user-attachments/assets/1db4d44d-123e-47a1-b0b6-e5b986f365f6" />
+
+
 If you only need Table 1, running with the default `--mode P1` is faster and cheaper — no Graphviz or knowledge-base setup is needed either.
 
 There's no `--context` flag: the study-context is always `disease` (the only value this pipeline currently supports), so it's fixed internally rather than something you type every time.
