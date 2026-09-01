@@ -1078,33 +1078,6 @@ def find_gene_identity_info(elements, sample_model: str = None) -> dict:
 
 
 # ─────────────────── PubMed evidence (Prompt 1 / Table 1) ──────────────────
-# Real per-element evidence, replacing the old GPT-memory-only Prompt A/B.
-# Flow: one real PubMed search per element (esearch) -> real abstract text
-# for the hits (efetch) -> abstracts split into small batches -> each batch
-# read ONCE, statelessly, by PROMPT_PUBMED_EXTRACT (no batch sees any other
-# batch's results) -> batch outputs (PMID, Direction) tallied together in
-# plain Python (build_table1_evidence), never by asking the LLM to track a
-# running total. PMID is the permanent citation; raw abstract text itself
-# is cached locally only as a speed optimization (like uniprot_cache_v2/), not
-# because it needs to be kept -- anyone can always re-fetch by PMID.
-PUBMED_CACHE_DIR = HERE / "pubmed_cache"
-PUBMED_BATCH_SIZE = 20      # abstracts per LLM extraction call (kept small for reliability)
-PUBMED_DISEASE_TERMS = ['periodontitis[tiab]', '"periodontal disease"[tiab]', '"gum disease"[tiab]']
-# Coverage guarantee threshold (see fetch_ranked_combined_pool): an element
-# needs at least this many mentions in the combined top-N pool to count as
-# genuinely "covered" -- below that, it also gets its own small dedicated
-# fallback search (fetch_pubmed_abstracts_for_element), same as a
-# zero-mention element. A single tangential mention in the combined pool
-# is not always enough for the LLM to report a direction for that element
-# across all extraction runs, so requiring at least 3 mentions before
-# skipping the fallback catches thinly-covered elements the pool alone
-# would leave with empty evidence. This is a "try harder" threshold, not
-# a guarantee: an element whose real PubMed literature is genuinely
-# thinner than 3 abstracts under this pipeline's search terms will still
-# show fewer than 3 Total Abstracts Screened -- this pipeline never
-# fabricates an abstract to hit a quota. Raise further to be more
-# thorough at the cost of more PubMed calls for elements that already
-# have several fine hits.
 COMBINED_POOL_MIN_MENTIONS_PER_ELEMENT = 3
 NCBI_EUTILS_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 
@@ -4658,7 +4631,9 @@ def build_table3_knowledge_graph(sample: str, table3_df: pd.DataFrame, obs_df: p
 
 
 # ─────────────────── Prompt 3: Biological Interpretation ───────────────────
-PROMPT_TABLE_INTERPRETATION = """AI Role
+PROMPT_TABLE_INTERPRETATION = """
+
+AI Role
 You are a professor with the highest academic standards, possessing expert knowledge in immunology, microbiology, and the pathophysiology of periodontitis.
 
 Input Data
@@ -4667,10 +4642,12 @@ Below is the "study context." Study Context has the information that describes t
 Study context:
 {study_context}
 
+
 Below is the "element list". For each element, the Observed Shift represents a comparison between the dataset's Baseline Group and Target Group, both defined in the Study Context above. An Observed Shift of 1 means the element's value is higher in the Target Group than in the Baseline Group (an increase); -1 means it is lower (a decrease).
 
 Element list:
 {element_list}
+
 
 Below is Table 1. For each element, the Observed Shift represents a comparison between the dataset's Baseline Group and Target Group, both defined in the Study Context above. An Observed Shift of 1 means the element's value is higher in the Target Group than in the Baseline Group (an increase); -1 means it is lower (a decrease). Under the column of Evidence for Up, Evidence for Down, and Evidence for Mixed, each listing the PMIDs whose real abstract text reported that direction. % Support with Observed Shift is the percentage of that element's total literature evidence whose direction agrees with its Observed Shift.
 
@@ -4707,6 +4684,9 @@ When a candidate mechanism includes a microbial virulence factor reported in Tab
 
 Every row in Table 3 must be represented inside a group's "List of elements" -- never silently dropped. A row that reports only a single relationship and does not connect to a larger cluster (for example, one microbe and its one reported virulence factor) is still a valid, complete mechanism on its own -- form a minimal group from it rather than omitting it for being sparse or isolated from the rest of the network. Only an element Table 3 never mentions at all belongs in the separate Unsupported Elements section below, not an element you simply chose not to group.
 
+
+
+
 Reporting Instructions
 1. Table:
 Summarize the results in a table. Columns should be arranged with this order: "Group Name," "List of PMID and Knowledge Base IDs (Evidence Source)," "List of elements," " Evidence Summary," and "Observation Summary."
@@ -4720,11 +4700,11 @@ Summarize the results in a table. Columns should be arranged with this order: "G
 The table should be pipe-separated ("|") with header row without divider nor extra spaces.
 
 2. Evidence-based narrative:
-Develop one or more literature-supported mechanistic hypotheses from the biological relationships summarized in Tables 2 and 3. Then evaluate how well each hypothesis explains the observed and literature-supported changes in Table 1. When inconsistencies exist, report them rather than resolving them by inference. For the citation format, use this format, (PMID: 12345, UniProt:P12345). Clearly indicate when supporting evidence comes from a different Study Context. When evidence conflicts, say "Literature is inconsistent." When a hypothesis includes a microbial virulence factor from Table 3, explicitly explain how that virulence factor affects host cells, grounded only in that row's real Supporting Evidence.
-
+Develop one or more literature-supported mechanistic hypotheses from the biological relationships summarized in Tables 2 and 3. Then evaluate how well each hypothesis explains the observed and literature-supported changes in Table 1. When inconsistencies exist, report them rather than resolving them by inference. Clearly indicate when supporting evidence comes from a different Study Context. When evidence conflicts, say "Literature is inconsistent." When a hypothesis includes a microbial virulence factor from Table 3, explicitly explain how that virulence factor affects host cells, grounded only in that row's real Supporting Evidence.
 
 3. Unsupported Elements in grouping:
-Write the heading "# Unsupported Elements in grouping" (a single "#", not "###") EXACTLY ONCE, as the very last line of your entire response -- never repeat this heading anywhere else in the response. On the line(s) below that one heading, list every element from the Element List that is NOT mentioned as Element A or Element B in any row of Table 3 -- check this directly against Table 3's own Element A/Element B columns, not against the groups you built above. These are elements with no pairwise relationship evidence available at all. (An element that IS mentioned in Table 3 belongs in a group above, per the completeness rule stated earlier -- even a single, isolated relationship still forms its own minimal group -- so it should not also appear here.) If every Element List element is mentioned somewhere in Table 3, write "None" under that same single heading instead of a list.
+Write the heading "# Unsupported Elements in grouping" EXACTLY ONCE as the final line. Below it, list every Element List item not appearing as Element A or Element B in any Table 3 row. Check only Table 3's Element A/Element B columns. 
+
 
 """
 
