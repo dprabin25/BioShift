@@ -1,0 +1,10 @@
+Element,GPT shift 1,GPT shift 2,Biological Group,Group ID based on Biological Group,Notes (if any),Observed Shift
+APCs,1,,,,,-1
+IL-1A,1,1,Pro-inflammatory Cytokines,1,Commonly increased in periodontitis.,1
+IL-1B,1,1,Pro-inflammatory Cytokines,1,Commonly increased in periodontitis.,1
+IL-6,1,1,Pro-inflammatory Cytokines,1,Commonly increased in periodontitis.,1
+MNPs,1,,,,,1
+Porphyromonas gingivalis,1,1,Periodontal Pathogens,3,Recognized as a key pathogen in periodontitis.,1
+Tannerella forsythia,1,1,Periodontal Pathogens,3,Recognized as a key pathogen in periodontitis.,1
+Th17,1,1,T-helper Cell Subsets,2,Associated with increased inflammation in gum disease.,-1
+Treponema denticola,1,1,Periodontal Pathogens,3,Recognized as a key pathogen in periodontitis.,1

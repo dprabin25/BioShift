@@ -1,0 +1,17 @@
+Element,Observed Shift,Expected Shift,Biological Group
+MCP-3,1,1,Chemokines
+RANTES,1,1,Chemokines
+G-CSF,1,1,Hematopoietic Cytokines
+GM-CSF,1,1,Hematopoietic Cytokines
+MMP-1,1,1,Matrix Metalloproteinases
+MMP-10,1,1,Matrix Metalloproteinases
+MMP-2,1,1,Matrix Metalloproteinases
+Actinomyces sp. oral taxon 170,1,1,Periodontal Pathogens
+Actinomyces sp. oral taxon 171,1,1,Periodontal Pathogens
+Actinomyces sp. oral taxon 448,1,1,Periodontal Pathogens
+Aggregatibacter actinomycetemcomitans,1,1,Periodontal Pathogens
+Treponema denticola,1,1,Periodontal Pathogens
+IL-17A,1,1,Pro-inflammatory Cytokines
+IL-1A,1,1,Pro-inflammatory Cytokines
+IL-1B,1,1,Pro-inflammatory Cytokines
+IL-6,1,1,Pro-inflammatory Cytokines

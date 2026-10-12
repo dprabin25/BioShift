@@ -1,0 +1,13 @@
+Based on the analysis of the provided elements in relation to their joint shifts in gum disease, I have identified the following groups and pairs that are commonly reported to shift together. The table summarizes these findings, indicating the direction of shifts for each element within the identified groups.
+
+| Element                        | GPT shift 2 | Biological Group               | Group ID based on Biological Group | Notes (if any)                |
+|-------------------------------|--------------|--------------------------------|------------------------------------|-------------------------------|
+| IL-1B                         | 1            | Pro-inflammatory Cytokines     | 1                                  | Commonly increased in periodontitis. |
+| IL-6                          | 1            | Pro-inflammatory Cytokines     | 1                                  | Commonly increased in periodontitis. |
+| Th17                          | 1            | T-helper Cell Subsets          | 2                                  | Associated with increased inflammation in gum disease. |
+| Porphyromonas gingivalis     | 1            | Periodontal Pathogens          | 3                                  | Recognized as a key pathogen in periodontitis. |
+| Treponema denticola          | 1            | Periodontal Pathogens          | 3                                  | Recognized as a key pathogen in periodontitis. |
+| Tannerella forsythia         | 1            | Periodontal Pathogens          | 3                                  | Recognized as a key pathogen in periodontitis. |
+| IL-1A                         | 1            | Pro-inflammatory Cytokines     | 1                                  | Commonly increased in periodontitis. |
+
+This summary captures the established evidence of joint shifts among the listed elements in relation to gum disease, specifically periodontitis.

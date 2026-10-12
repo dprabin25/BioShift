@@ -1,0 +1,68 @@
+digraph InflammationWoundHealing {
+  // Clean, print-friendly layout
+  rankdir=same;
+  splines=true;
+  nodesep=0.9;
+  ranksep=1.1;
+  compound=true;          // allow edges to/from clusters
+  fontname="Helvetica";
+
+  graph [
+    labelloc="t",
+    label="Inflammation and wound healing",
+    fontcolor="#C95A49",
+    fontsize=24
+  ];
+
+  node [style=filled, fillcolor=white, fontname="Helvetica"];
+  edge [penwidth=2, fontname="Helvetica"];
+
+  // Main actors
+  Thrombin [shape=oval];
+  Platelet [shape=oval, label="Platelets"];
+
+  // ===== Growth Factors cluster =====
+  subgraph cluster_gf {
+    label="Growth Factors";
+    fontsize=16; fontcolor="#C95A49";
+    color=black; style=rounded; penwidth=1.5;
+
+    // Invisible anchor to target the whole box with a single edge
+    GF_anchor [shape=point, width=0, label="", style=invis];
+
+    EGF       [shape=hexagon];
+    FGF       [shape=hexagon];
+    PDGF      [shape=hexagon];
+    IGF_1     [shape=hexagon, label="IGF-1"];
+    TGF_alpha [shape=hexagon, label="TGF-A"];
+    TGF_beta  [shape=hexagon, label="TGF-B"];
+  }
+
+  // ===== Immune Cells cluster =====
+  subgraph cluster_cells {
+    label="Immune Cells";
+    fontsize=16; fontcolor="#C95A49";
+    color=black; style=rounded; penwidth=1.5;
+
+    // Invisible anchor for single incoming edge
+    IC_anchor [shape=point, width=0, label="", style=invis];
+
+    Macrophage  [shape=oval];
+    Neutrophils [shape=oval];
+    Monocytes   [shape=oval];
+    Leucocytes  [shape=oval];
+  }
+
+  // ===== Edges (minimal + clear) =====
+  // Thrombin activates platelets
+  edge [color="#1F77B4", fontcolor="#1F77B4", penwidth=2.5];
+  Thrombin -> Platelet [label="Activation", labelfontsize=11];
+
+  // Single arrow: Platelets produce Growth Factors (to the box)
+  edge [color="#17BECF", fontcolor="#17BECF", penwidth=2.5];
+  Platelet -> GF_anchor [label="  Production", labelfontsize=11, lhead=cluster_gf];
+
+  // Single arrow: Growth Factors activate Immune Cells (box to box)
+  edge [color="#1F77B4", fontcolor="#1F77B4", penwidth=2.5];
+  GF_anchor -> IC_anchor [ labelfontsize=11, ltail=cluster_gf, lhead=cluster_cells];
+}

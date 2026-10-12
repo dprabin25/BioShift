@@ -1,0 +1,102 @@
+digraph Macrophage_Polarization {
+  // Side-by-side M1 (inflammatory) and M2 (anti-inflammatory) groups
+  rankdir=LR;
+  graph [pad="0.5", nodesep="1", ranksep="1"];
+  node [fontname="Arial", fontsize=12];
+
+  // M1 inflammatory group
+  subgraph cluster_M1Group {
+    label=<<B>Inflammatory cytokines and M1 macrophage</B>>;
+    fontname="Arial"; fontsize=16; fontcolor="#C95A49";
+    style=rounded; color="#000000";
+
+    // M1 macrophage node
+    "M1" [label="M1 macrophage", shape=ellipse, style=filled, fillcolor="#FFFFFF", fontsize=14];
+
+    // Chemokines sub-cluster
+    subgraph cluster_Chemokines1 {
+      label=<<B>Chemokines</B>>; fontname="Arial"; fontsize=14; fontcolor="black";
+      style=rounded; color="#000000";
+      node [shape=hexagon, style=filled, fillcolor="#FFFFFF", fontsize=12];
+      "Che1Root" [shape=point, width=0.1, style=invis];
+      "CXCL1"   [label="CXCL1"];  "CXCL3"   [label="CXCL3"];  "CXCL5"   [label="CXCL5"];  "CXCL8"   [label="CXCL8"];
+      "CXCL9"   [label="CXCL9"];  "CXCL10"  [label="CXCL10"]; "CXCL11"  [label="CXCL11"]; "CXCL16"  [label="CXCL16"];
+      "CX3CL1"  [label="CX3CL1"]; "CCL2"    [label="CCL2"];   "CCL3"    [label="CCL3"];   "CCL4"    [label="CCL4"];
+      "CCL5"    [label="CCL5"];   "CCL8"    [label="CCL8"];   "MIP-1D"  [label="MIP-1D"]; "CCL19"   [label="CCL19"];  "CCL20"   [label="CCL20"];
+      "Che1Root" -> "CXCL1" -> "CXCL3" -> "CXCL5" -> "CXCL8" -> "CXCL9" -> "CXCL10" [style=invis];
+      "Che1Root" -> "CXCL11" -> "CXCL16" -> "CX3CL1" -> "CCL2" -> "CCL3" -> "CCL4" [style=invis];
+      "Che1Root" -> "CCL5" -> "CCL8" -> "MIP-1D" -> "CCL19" -> "CCL20" [style=invis];
+      { rank=same; "CXCL1"; "CXCL11"; "CCL5"; }
+      { rank=same; "CXCL3"; "CXCL16"; "CCL8"; }
+      { rank=same; "CXCL5"; "CX3CL1"; "MIP-1D"; }
+      { rank=same; "CXCL8"; "CCL2";  "CCL19"; }
+      { rank=same; "CXCL9"; "CCL3";  "CCL20"; }
+      { rank=same; "CXCL10"; "CCL4"; }
+    }
+
+    // Cytokines sub-cluster
+    subgraph cluster_Cytokines1 {
+      label=<<B>Cytokines</B>>; fontname="Arial"; fontsize=14; fontcolor="black";
+      style=rounded; color="#000000";
+      node [shape=hexagon, style=filled, fillcolor="#FFFFFF", fontsize=12];
+      "Cyt1Root" [shape=point, width=0.1, style=invis];
+      "TNF-A"   [label="TNF-A"];
+      "IL-1B"   [label="IL-1B"];
+      "IL-6"    [label="IL-6"];
+      "IL-12"   [label="IL-12"];
+      "IL-23"   [label="IL-23"];
+      "Cyt1Root" -> "TNF-A" [style=invis];
+      "TNF-A" -> "IL-1B" -> "IL-6" -> "IL-12" -> "IL-23" [style=invis];
+    }
+
+    // === Production edges (cyan) ===
+    edge [color="#17BECF", fontcolor="#17BECF"];
+    "M1" -> "Che1Root" [arrowsize=1.2, label="Production", labelfontsize=10, labeldistance=2, labelangle=0];
+    "M1" -> "Cyt1Root" [arrowsize=1.2];
+  }
+
+  // M2 anti-inflammatory group
+  subgraph cluster_M2Group {
+    label=<<B>Anti-inflammatory cytokines and M2 macrophage</B>>;
+    fontname="Arial"; fontsize=16; fontcolor="#C95A49";
+    style=rounded; color="#000000";
+
+    // M2 macrophage node
+    "M2" [label="M2 macrophage", shape=ellipse, style=filled, fillcolor="#FFFFFF", fontsize=14];
+
+    // Chemokines sub-cluster for M2
+    subgraph cluster_Chemokines2 {
+      label=<<B>Chemokines</B>>; fontname="Arial"; fontsize=14; fontcolor="black";
+      style=rounded; color="#000000";
+      node [shape=hexagon, style=filled, fillcolor="#FFFFFF", fontsize=12];
+      "Che2Root" [shape=point, width=0.1, style=invis];
+      "CCL1"   [label="CCL1"];
+      "CCL17"  [label="CCL17"];
+      "CCL18"  [label="CCL18"];
+      "CCL22"  [label="CCL22"];
+      "CCL24"  [label="CCL24"];
+      "CXCL13" [label="CXCL13"];
+      "Che2Root" -> "CCL1" -> "CCL17" -> "CCL18" -> "CCL22" -> "CCL24" -> "CXCL13" [style=invis];
+    }
+
+    // Cytokines sub-cluster for M2
+    subgraph cluster_Cytokines2 {
+      label=<<B>Cytokines</B>>; fontname="Arial"; fontsize=14; fontcolor="black";
+      style=rounded; color="#000000";
+      node [shape=hexagon, style=filled, fillcolor="#FFFFFF", fontsize=12];
+      "Cyt2Root" [shape=point, width=0.1, style=invis];
+      "IL-4"   [label="IL-4"];
+      "IL-10"  [label="IL-10"];
+      "IL-13"  [label="IL-13"];
+      "IL-1RA" [label="IL-1RA"];
+      "TGF-B"  [label="TGF-B"];
+      "VEGF"   [label="VEGF"];
+      "Cyt2Root" -> "IL-4" -> "IL-10" -> "IL-13" -> "IL-1RA" -> "TGF-B" -> "VEGF" [style=invis];
+    }
+
+    // === Production edges (cyan) ===
+    edge [color="#17BECF", fontcolor="#17BECF"];
+    "M2" -> "Che2Root" [arrowsize=1.2, label="Production", labelfontsize=10, labeldistance=2, labelangle=0];
+    "M2" -> "Cyt2Root" [arrowsize=1.2];
+  }
+}

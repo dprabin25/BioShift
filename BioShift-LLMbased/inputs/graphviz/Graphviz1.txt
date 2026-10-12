@@ -1,0 +1,128 @@
+digraph Periodontitis_Network {
+  graph [
+    labelloc="t",
+    label="Immunological responses triggered by colonization with the \"red complex\" pathogens",
+    fontcolor="#C95A49",
+    fontname="Arial"
+    fontsize=24
+  ];
+  rankdir=LR;
+  fontname="Helvetica";
+  node [style=filled, fillcolor=white, fontname="Helvetica"];
+  edge [penwidth=2];
+
+  // === Node definitions ===
+  "Porphyromonas gingivalis" [shape=box, label=<<I>Porphyromonas gingivalis</I>>];
+  "Treponema denticola"     [shape=box, label=<<I>Treponema denticola</I>>];
+  "Tannerella forsythia"    [shape=box, label=<<I>Tannerella forsythia</I>>];
+  "Epithelial cell"         [shape=ellipse];
+  "Fibroblasts"             [shape=ellipse];
+  "B Cells"                 [shape=ellipse];
+  "Treg"                    [shape=ellipse];
+  "Th1"                     [shape=ellipse];
+  "Th2"                     [shape=ellipse];
+  "Th17"                    [shape=ellipse];
+  "CD4"                     [shape=ellipse];
+  "APCs"                    [shape=ellipse];
+  "MNPs"                    [shape=ellipse];
+  "Neutrophils"             [shape=ellipse];
+  "Osteoclasts"             [shape=ellipse];
+  "Osteoblasts"             [shape=ellipse];
+  "IL-1B"                   [shape=hexagon];
+  "IL-6"                    [shape=hexagon];
+  "TNF-A"                   [shape=hexagon];
+  "IL-17"                   [shape=hexagon];
+  "IL-22"                   [shape=hexagon];
+  "IL-4"                    [shape=hexagon];
+  "IL-5"                    [shape=hexagon];
+  "IL-13"                   [shape=hexagon];
+  "IL-12"                   [shape=hexagon];
+  "IFN-G"                   [shape=hexagon];
+  "IL-23"                   [shape=hexagon];
+  "IL-1A"                   [shape=hexagon];
+  "IL-2"                    [shape=hexagon];
+  "TGF-B"                   [shape=hexagon];
+  "IL-10"                   [shape=hexagon];
+  "IL-35"                   [shape=hexagon];
+  "Antibodies"              [shape=diamond];
+  "Bone"                    [shape=parallelogram];
+
+  // === Activation edges (blue) ===
+  edge [color="#1F77B4", fontcolor="#1F77B4"];
+  "Porphyromonas gingivalis" -> "Epithelial cell"
+    [label="Activation", labelfontsize=10, labeldistance=2, labelangle=0];
+  "Treponema denticola"     -> "Epithelial cell";
+  "Tannerella forsythia"    -> "Epithelial cell";
+  "Porphyromonas gingivalis" -> "Fibroblasts";
+  "Treponema denticola"     -> "Fibroblasts";
+  "Tannerella forsythia"    -> "Fibroblasts";
+  "IL-6" -> "B Cells";
+  "IL-6" -> "Treg";
+  "IL-6" -> "Th1";
+  "IL-6" -> "Th17";
+  "IL-1B" -> "Th2";
+  "IL-1B" -> "Th1";
+  "Porphyromonas gingivalis" -> "Th17";
+  "Treponema denticola"     -> "Th17";
+  "Tannerella forsythia"    -> "Th17";
+  "Th17" -> "Neutrophils";
+
+  // === Production edges (cyan) ===
+  edge [color="#17BECF", fontcolor="#17BECF"];
+  "Epithelial cell" -> "IL-1B"
+    [label="Production", labelfontsize=10, labeldistance=2, labelangle=0];
+  "Epithelial cell" -> "IL-6";
+  "Epithelial cell" -> "TNF-A";
+  "Fibroblasts" -> "IL-1B";
+  "Fibroblasts" -> "IL-6";
+  "Fibroblasts" -> "TNF-A";
+  "B Cells" -> "Antibodies";
+  "Th17" -> "IL-17";
+  "Th17" -> "IL-22";
+  "Th2"  -> "IL-4";
+  "Th2"  -> "IL-5";
+  "Th2"  -> "IL-13";
+  "Th1"  -> "IL-12";
+  "Th1"  -> "IFN-G";
+  "MNPs" -> "IL-12";
+  "MNPs" -> "IL-4";
+  "MNPs" -> "IL-23";
+  "MNPs" -> "IL-1A";
+  "MNPs" -> "IL-2";
+  "MNPs" -> "TGF-B";
+  "APCs" -> "IL-12";
+  "APCs" -> "IL-4";
+  "APCs" -> "IL-23";
+  "APCs" -> "IL-1A";
+  "APCs" -> "IL-2";
+  "APCs" -> "TGF-B";
+
+  // === Pro-inflammation edges (magenta) ===
+  edge [color="#FF00FF ", fontcolor="#FF00FF"];
+  "Antibodies" -> "Osteoblasts"
+    [label="Pro-inflammation", labelfontsize=10, labeldistance=2, labelangle=0];
+  "Osteoblasts" -> "Bone";
+  "Neutrophils" -> "Osteoclasts";
+
+  // === Anti-inflammation edges (green) ===
+  edge [color="#2CA02C", fontcolor="#2CA02C"];
+  "IL-12" -> "Osteoclasts"
+    [label="Anti-inflammation", labelfontsize=10, labeldistance=2, labelangle=0];
+  "IFN-G" -> "Osteoclasts";
+  "IL-17" -> "Epithelial cell";
+  "IL-22" -> "Fibroblasts";
+  "IL-35" -> "MNPs";
+  "IL-35" -> "APCs";
+  "TGF-B" -> "MNPs";
+  "TGF-B" -> "APCs";
+  "IL-10" -> "MNPs";
+  "IL-10" -> "APCs";
+
+  // === Differentiation edges (grey dashed) ===
+  edge [color="#7F7F7F", style=dashed, fontcolor="#7F7F7F"];
+  "CD4" -> "Th1"
+    [label="Differentiation", labelfontsize=10, labeldistance=2, labelangle=0];
+  "CD4" -> "Th2";
+  "CD4" -> "Th17";
+  "CD4" -> "Treg";
+}

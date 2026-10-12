@@ -1,0 +1,21 @@
+Based on the provided elements and their associations with healthy gum status and recovery from gum disease, the following summary table has been compiled:
+
+| Element                      | GPT shift 2 | Biological Group             | Group ID based on Biological Group | Notes (if any)                 |
+|------------------------------|--------------|-------------------------------|------------------------------------|---------------------------------|
+| IL-1B                        | -1           | Pro-inflammatory Cytokines    | 1                                  | Typically decreases with recovery|
+| IL-6                         | -1           | Pro-inflammatory Cytokines    | 1                                  | Typically decreases with recovery|
+| MNPs                         | 1            | Immune Cell Activation         | 2                                  | Increase associated with recovery|
+| APCs                         | 1            | Immune Cell Activation         | 2                                  | Increase associated with recovery|
+| Th17                         | -1           | T-helper Cell Subsets         | 3                                  | Typically decreases with recovery|
+| Porphyromonas gingivalis     | -1           | Pathogenic Microorganisms     | 4                                  | Typically decreases with recovery|
+| Treponema denticola          | -1           | Pathogenic Microorganisms     | 4                                  | Typically decreases with recovery|
+| Tannerella forsythia         | -1           | Pathogenic Microorganisms     | 4                                  | Typically decreases with recovery|
+| IL-1A                        | -1           | Pro-inflammatory Cytokines    | 1                                  | Typically decreases with recovery|
+
+### Notes on Grouping:
+- **Pro-inflammatory Cytokines (Group ID 1)**: Includes IL-1B, IL-6, and IL-1A, which are known to decrease during recovery from gum disease.
+- **Immune Cell Activation (Group ID 2)**: MNPs and APCs are involved in the immune response and are typically reported to increase during recovery.
+- **T-helper Cell Subsets (Group ID 3)**: Th17 cells, which are associated with inflammation, typically decrease during recovery.
+- **Pathogenic Microorganisms (Group ID 4)**: The presence of Porphyromonas gingivalis, Treponema denticola, and Tannerella forsythia decreases with recovery, indicating a shift towards healthier microbial communities.
+
+This table summarizes the associations and shifts observed in relation to healthy gum status and recovery from gum disease.

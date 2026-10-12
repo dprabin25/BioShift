@@ -1,0 +1,15 @@
+Based on the investigation of the provided elements and their associations with healthy gum status, here is the summary table:
+
+| Element                   | GPT shift 1 |
+|---------------------------|--------------|
+| IL-1B                     | -1           |
+| IL-6                      | -1           |
+| MNPs                      | 1            |
+| APCs                      | 1            |
+| Th17                      | 0            |
+| Porphyromonas gingivalis  | -1           |
+| Treponema denticola       | -1           |
+| Tannerella forsythia      | -1           |
+| IL-1A                     | 0            |
+
+This table summarizes the known associations of the listed items with healthy gum status, indicating the direction of change where applicable.

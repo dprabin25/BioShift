@@ -1,0 +1,9 @@
+IL-1B
+IL-6
+MNPs
+APCs
+Th17
+Porphyromonas gingivalis
+Treponema denticola
+Tannerella forsythia
+IL-1A
