@@ -7,10 +7,10 @@ MAX_TOKENS=2000
 
 COSHIFT_MODEL=gpt-4o-mini
 COSHIFT_MAX_TOKENS=2000
-
-# Interpretation (Prompt 3)
 PROMPT3_MAX_TOKENS=2000
+
 TOP_P=1.0
+
 SEED=
 
 
