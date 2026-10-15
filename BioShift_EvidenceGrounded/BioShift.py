@@ -62,6 +62,12 @@ def _parse_simple_kv(path: Path) -> dict:
         if not line or line.startswith("#") or "=" not in line:
             continue
         k, v = line.split("=", 1)
+        # Strip trailing inline comments ("VALUE   ## note") -- without this,
+        # e.g. DISEASE_STAGE= Infection of P. micra   ## Use stable ...
+        # was passed verbatim (comment included) into every prompt's
+        # Study Context block. Requires whitespace before '#', so a '#'
+        # inside a value with no leading space is left untouched.
+        v = re.sub(r"\s+#.*$", "", v)
         cfg[k.strip().upper()] = v.strip()
     return cfg
 
@@ -154,6 +160,48 @@ def load_coshift_max_tokens() -> int:
 
 COSHIFT_MODEL = load_coshift_model()
 COSHIFT_MAX_TOKENS = load_coshift_max_tokens()
+
+
+def _is_reasoning_model(model: str) -> bool:
+    """GPT-5 family and o-series are reasoning models: the Chat Completions
+    API rejects `max_tokens` (needs `max_completion_tokens`) and any
+    non-default `temperature`/`top_p`, and hidden reasoning tokens count
+    against the completion budget -- so a 2000-token cap can return an
+    EMPTY answer with finish_reason='length'."""
+    m = (model or "").strip().lower()
+    return m.startswith(("gpt-5", "gpt-6")) or bool(re.match(r"^o\d", m))
+
+
+def load_prompt3_model() -> str:
+    """Optional Prompt-3-only model (PROMPT3_MODEL in config.txt), falling
+    back to DEFAULT_MODEL. The --model CLI flag overrides both."""
+    kv = _parse_simple_kv(CONFIG_TXT)
+    return (kv.get("PROMPT3_MODEL") or "").strip() or DEFAULT_MODEL
+
+
+def load_prompt3_max_tokens(model: str) -> int:
+    """PROMPT3_MAX_TOKENS in config.txt. If blank: 16000 for reasoning
+    models (room for hidden reasoning + the full table/narrative), else
+    MAX_TOKENS."""
+    kv = _parse_simple_kv(CONFIG_TXT)
+    raw = (kv.get("PROMPT3_MAX_TOKENS") or "").strip()
+    if raw:
+        try:
+            return int(raw)
+        except ValueError:
+            pass
+    return 16000 if _is_reasoning_model(model) else MAX_TOKENS
+
+
+def load_reasoning_effort() -> str:
+    """REASONING_EFFORT in config.txt (minimal/low/medium/high) -- sent only
+    to reasoning models. Blank = API default (medium)."""
+    kv = _parse_simple_kv(CONFIG_TXT)
+    val = (kv.get("REASONING_EFFORT") or "").strip().lower()
+    return val if val in ("minimal", "low", "medium", "high") else ""
+
+
+REASONING_EFFORT = load_reasoning_effort()
 
 # Prompt 2 carries no KB content in its own text (PubMed abstracts only,
 # same as Prompt 1); KB-sourced Table 2/3 rows are built directly in Python
@@ -453,6 +501,13 @@ except Exception:
 FOLDERS = {
     "observed": HERE / "ObservedShift",
     "output":   HERE / "outputs",
+    # Pre-built evidence tables for --mode P3 (Prompt 3 only):
+    #   EvidenceTable/<sample>_Table3.csv   (required)
+    #   EvidenceTable/<sample>_Table1.csv   (optional)
+    #   EvidenceTable/<sample>_Table2.csv   (optional)
+    "evidence": HERE / "EvidenceTable",
+    # --mode P3 results: <name>_Prompt3_output_<model>.txt + <name>_log_<model>.txt
+    "evidence_output": HERE / "EvidenceTableOutputs",
 }
 for p in FOLDERS.values():
     p.mkdir(parents=True, exist_ok=True)
@@ -538,6 +593,16 @@ def ensure_dir(path: Path):
 _PRICING_PER_1M_TOKENS = {
     "gpt-4o": (2.50, 10.00),
     "gpt-4o-mini": (0.15, 0.60),
+    # gpt-4.1: OpenAI's published launch price -- re-check before quoting.
+    "gpt-4.1": (2.00, 8.00),
+    # GPT-5 family (standard tier). gpt-5-mini verified on OpenAI's model
+    # page 2026-10-15; gpt-5 / gpt-5-nano are OpenAI's published launch
+    # prices -- re-check developers.openai.com/api/docs/pricing before
+    # quoting costs in the manuscript. Output price includes reasoning
+    # tokens (billed as output).
+    "gpt-5": (1.25, 10.00),
+    "gpt-5-mini": (0.25, 2.00),
+    "gpt-5-nano": (0.05, 0.40),
 }
 _cost_lock = threading.Lock()
 _cost_totals = defaultdict(lambda: {"input_tokens": 0, "output_tokens": 0, "calls": 0, "snapshots": set()})
@@ -754,6 +819,13 @@ def call_openai(prompt: str, model: str = None, max_tokens: int = None) -> str:
     """
     use_model = model or DEFAULT_MODEL
     use_max_tokens = max_tokens if max_tokens is not None else MAX_TOKENS
+    reasoning = _is_reasoning_model(use_model)
+    if reasoning and _OPENAI_NEW_CLIENT is None:
+        print(f"WARNING: {use_model} is a reasoning model; the legacy openai<1.0 client "
+              f"cannot call it correctly. Upgrade with: pip install -U openai")
+    # Parameters the API rejected for this model (e.g. 'seed'); dropped on
+    # retry instead of burning all 3 attempts on the same 400 error.
+    dropped_params = set()
     last_err = None
     for attempt in range(1, 4):
         try:
@@ -761,12 +833,20 @@ def call_openai(prompt: str, model: str = None, max_tokens: int = None) -> str:
                 kwargs = dict(
                     model=use_model,
                     messages=[{"role": "user", "content": prompt}],
-                    temperature=TEMPERATURE,
-                    max_tokens=use_max_tokens,
-                    top_p=TOP_P,
                 )
+                if reasoning:
+                    # Reasoning models: max_completion_tokens (covers hidden
+                    # reasoning + visible answer); temperature/top_p fixed
+                    # by the API at their defaults, so never sent.
+                    kwargs["max_completion_tokens"] = use_max_tokens
+                    if REASONING_EFFORT:
+                        kwargs["reasoning_effort"] = REASONING_EFFORT
+                else:
+                    kwargs.update(temperature=TEMPERATURE, max_tokens=use_max_tokens, top_p=TOP_P)
                 if SEED is not None:
                     kwargs["seed"] = SEED
+                for p in dropped_params:
+                    kwargs.pop(p, None)
                 resp = _OPENAI_NEW_CLIENT.chat.completions.create(**kwargs)
                 text = resp.choices[0].message.content or ""
                 usage = getattr(resp, "usage", None)
@@ -781,6 +861,16 @@ def call_openai(prompt: str, model: str = None, max_tokens: int = None) -> str:
                                        getattr(usage, "completion_tokens", 0) or 0, snapshot=real_snapshot)
                 finish_reason = getattr(resp.choices[0], "finish_reason", None)
                 _warn_if_truncated(finish_reason, use_model, use_max_tokens, usage)
+                if reasoning and usage is not None:
+                    details = getattr(usage, "completion_tokens_details", None)
+                    r_tok = getattr(details, "reasoning_tokens", None) if details is not None else None
+                    if r_tok is not None:
+                        print(f"[{use_model}] reasoning tokens: {r_tok:,} of "
+                              f"{getattr(usage, 'completion_tokens', 0) or 0:,} completion tokens "
+                              f"(cap {use_max_tokens:,}).")
+                    if not text.strip() and finish_reason == "length":
+                        print("WARNING: reasoning consumed the whole completion budget and no answer "
+                              "was written -- raise PROMPT3_MAX_TOKENS in config.txt.")
                 return text.strip()
             else:
                 resp = openai.ChatCompletion.create(
@@ -802,6 +892,13 @@ def call_openai(prompt: str, model: str = None, max_tokens: int = None) -> str:
         except Exception as e:
             print(f"OpenAI error ({attempt}/3): {e}")
             last_err = e
+            # "Unsupported parameter: 'seed'" / "Unsupported value: 'temperature'"
+            # -> drop that parameter and retry immediately.
+            m_param = re.search(r"Unsupported (?:parameter|value):\s*'([a-z_]+)'", str(e))
+            if m_param and m_param.group(1) not in dropped_params:
+                dropped_params.add(m_param.group(1))
+                print(f"  -> retrying without '{m_param.group(1)}' for {use_model}.")
+                continue
             # A 429 rate-limit error's message states exactly how long
             # until the per-minute budget frees up (e.g. "Please try
             # again in 30.284s"); a fixed 2/4/6s backoff is often shorter
@@ -1740,7 +1837,7 @@ def extract_multi_element_directions_from_batch(batch: list, elements: list, con
     prompt_template = get_pubmed_extract_multi_prompt(context)
     prompt = prompt_template.format(element_list=element_list_str, abstracts=_format_abstracts_block(batch),
                                      study_context=_study_context_block_for_prompt())
-    raw = call_openai(prompt)
+    raw = call_openai(prompt)  # GPT-1 (Prompt 1: per-element direction extraction -> Table 1)
     table_text = _extract_clean_table(raw, min_cols=2)
     rows = []
     dropped = []
@@ -3310,7 +3407,7 @@ def extract_and_group_coshift_from_batch(batch: list, elements: list, context: s
     # the model's attention within one response, so it gets its own
     # (optionally stronger/longer) call instead of always reusing
     # DEFAULT_MODEL/MAX_TOKENS.
-    raw = call_openai(prompt, model=COSHIFT_MODEL, max_tokens=COSHIFT_MAX_TOKENS)
+    raw = call_openai(prompt, model=COSHIFT_MODEL, max_tokens=COSHIFT_MAX_TOKENS)  # GPT-2 (Prompt 2 -> Table 2/3 PubMed rows)
     part_a_raw, part_b_raw = _split_part_a_part_b(raw)
     if not part_b_raw.strip():
         print("WARNING: co-shift combined response had no parseable '### PART B' section -- "
@@ -3859,7 +3956,7 @@ def _label_uniprot_relations_via_llm_once(uniprot_edges: list, elements: list,
     study_context = _study_context_block_for_prompt()
     prompt = PROMPT_UNIPROT_RELATION.format(
         items_block=items_block, element_list=element_list_str, study_context=study_context)
-    raw = call_openai(prompt, model=COSHIFT_MODEL, max_tokens=COSHIFT_MAX_TOKENS)
+    raw = call_openai(prompt, model=COSHIFT_MODEL, max_tokens=COSHIFT_MAX_TOKENS)  # old GPT-3 -- no longer called (see build_kb_sourced_table2_rows)
     part_a_raw, part_b_raw = _split_part_a_part_b(raw)
     if not part_b_raw.strip():
         print(f"WARNING: UniProt Relation run {run_idx}/{n_runs} response had no parseable '### PART B' "
@@ -4071,7 +4168,7 @@ def _label_uniprot_virulence_descriptions_via_llm_once(virulence_edges: list, el
     study_context = _study_context_block_for_prompt()
     prompt = PROMPT_UNIPROT_VIRULENCE_DESCRIPTION.format(
         items_block=items_block, element_list=element_list_str, study_context=study_context)
-    raw = call_openai(prompt, model=COSHIFT_MODEL, max_tokens=COSHIFT_MAX_TOKENS)
+    raw = call_openai(prompt, model=COSHIFT_MODEL, max_tokens=COSHIFT_MAX_TOKENS)  # old GPT-4 -- no longer called (see build_kb_sourced_table2_rows)
     part_a_raw, part_b_raw = _split_part_a_part_b(raw)
     if not part_b_raw.strip():
         print(f"WARNING: UniProt Virulence Description run {run_idx}/{n_runs} response had no parseable "
@@ -4246,6 +4343,44 @@ def _label_uniprot_virulence_descriptions_via_llm(virulence_edges: list, element
               f"{len(result)}/{len(virulence_edges)} row(s) labeled; 0 excluded.")
     return result
 
+# ─────────────────── KB rows: Python-only wording (no GPT) ─────────────────
+# Table 3 wording for every KB-sourced row, built deterministically from the
+# KB record itself. Same Relation for both sources; the Supporting Evidence
+# carries the specifics:
+#   ImmuneXpresso: "<A> is reported to positively|negatively influence <B>."
+#                  or "<A> is associated with <B>, but the direction of the
+#                  relationship is unknown." (from Action Sentiment)
+#   UniProt (KW-0843 virulence): the protein's own GO molecular-function
+#                  term(s), e.g. "DNA-binding transcription factor
+#                  activity"; "Virulence" when UniProt lists none.
+KB_RELATION_LABEL = "correlates with"
+KB_VIRULENCE_MAX_GO_TERMS = 2
+
+
+def _immunexpresso_evidence_sentence(elem_a: str, elem_b: str, sentiment: str) -> str:
+    s = str(sentiment or "").strip().lower()
+    if s == "positive":
+        return f"{elem_a} is reported to positively influence {elem_b}."
+    if s == "negative":
+        return f"{elem_a} is reported to negatively influence {elem_b}."
+    return f"{elem_a} is associated with {elem_b}, but the direction of the relationship is unknown."
+
+
+def _virulence_function_label(go_terms: str) -> str:
+    """'identical protein binding [GO:0042802]; toxin activity [GO:0090729]'
+    -> 'Identical protein binding; toxin activity' (first
+    KB_VIRULENCE_MAX_GO_TERMS terms, UniProt's own order). 'Virulence' if
+    the entry has no GO molecular-function terms -- still accurate, since
+    every row here matched UniProt's own Virulence keyword (KW-0843)."""
+    terms = [re.sub(r"\s*\[GO:\d+\]\s*", "", t).strip()
+             for t in str(go_terms or "").split(";")]
+    terms = [t for t in terms if t][:KB_VIRULENCE_MAX_GO_TERMS]
+    if not terms:
+        return "Virulence"
+    label = "; ".join(terms)
+    return label[0].upper() + label[1:]
+
+
 def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_model: str = None) -> dict:
     """Mostly-Python counterpart to Prompt 2's PubMed-sourced rows -- built
     directly from real ImmuneXpresso/UniProt data, with NO LLM call for
@@ -4344,9 +4479,12 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
     # return ImmuneXpresso edges here.
     raw_edges = [("ImmuneXpresso", e)
                  for e in find_kb_edges_for_elements(elements) + find_kb_neighborhood_edges(elements)]
-    uniprot_edges = find_uniprot_function_mentions(elements, sample_model)
-    for e in uniprot_edges:
-        raw_edges.append(("UniProt", e))
+    ### UniProt co-mention layer disabled for now -- it needed GPT-3
+    ### (_label_uniprot_relations_via_llm) to label its Relation.
+    ### uniprot_edges = find_uniprot_function_mentions(elements, sample_model)
+    ### for e in uniprot_edges:
+    ###     raw_edges.append(("UniProt", e))
+    uniprot_edges = []
 
     # Virulence-protein edges (UniProt keyword KW-0843 x each element's own
     # name via UniProt's organism_name search -- see find_uniprot_virulence_
@@ -4373,13 +4511,18 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
     # structured Relationship field (e.g. "cell-cytokine interaction"),
     # no LLM needed there. Keyed by id(edge) so a later `continue` (e.g. a
     # blank record ID) can never desync a positional index.
-    uniprot_relations = _label_uniprot_relations_via_llm(uniprot_edges, elements)
+    ### GPT-3 (UniProt co-mention Relation labeling) -- not used for now.
+    ### uniprot_relations = _label_uniprot_relations_via_llm(uniprot_edges, elements)
+    uniprot_relations = {}
 
     # LLM-authored virulence-protein DESCRIPTION text (separate small
     # batched call from the Relation-labeling one above), grounded in each
     # virulence edge's own Function_Text/GO_Terms. Keyed by id(edge), same
     # reasoning as uniprot_relations above.
-    virulence_descriptions = _label_uniprot_virulence_descriptions_via_llm(virulence_edges, elements)
+    ### GPT-4 (UniProt virulence description + study-context Include/Exclude)
+    ### -- not used for now; descriptions come from GO terms in Python.
+    ### virulence_descriptions = _label_uniprot_virulence_descriptions_via_llm(virulence_edges, elements)
+    virulence_descriptions = {}
 
     seen = set()
     part_a_rows, part_b_rows = [], []
@@ -4420,7 +4563,7 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
             # shared sentence to label a relationship from here, only the
             # fixed, deterministic, fully-grounded Relationship text this
             # edge builder itself already set.
-            relation = str(edge.get("Relationship", "")).strip() or VIRULENCE_RELATION_LABEL
+            relation = KB_RELATION_LABEL
             # How many of the PUBMED_EXTRACTION_RUNS independent virulence-
             # description runs actually produced a signal (Description
             # and/or Include/Exclude vote) for THIS specific edge -- see
@@ -4428,7 +4571,7 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
             # "n_runs_recovered". A genuine 0 here (edge fell back to raw
             # Function/GO text / 'Virulence' -- see the `quote` fallback
             # chain below) is a real, honest count, never a hedge.
-            run_count = vd.get("n_runs_recovered", 0) if vd else 0
+            run_count = None  # Python-only now (GPT-4 off): no LLM runs to count
         elif source_name == "UniProt":
             # uniprot_relations now maps id(edge) -> {"relation": ...,
             # "functions": ..., "n_runs_recovered": ...} (see
@@ -4445,7 +4588,7 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
             # (fell back to Verb_Cue/'co-mentioned').
             run_count = uniprot_llm.get("n_runs_recovered", 0)
         else:
-            relation = str(edge.get("Relationship", "") or "KB-documented interaction").strip()
+            relation = KB_RELATION_LABEL
             # ImmuneXpresso rows are built by pure deterministic Python --
             # no LLM call, no PUBMED_EXTRACTION_RUNS resampling at all (see
             # this function's own docstring) -- so there is no real "run
@@ -4462,10 +4605,7 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
             # non-fabricated label -- see find_uniprot_virulence_mentions'
             # docstring -- since every row here already matched UniProt's
             # own KW-0843 keyword on that exact entry).
-            quote = (str((vd or {}).get("description", "")).strip()
-                     or str(edge.get("Function_Text", "")).strip()
-                     or str(edge.get("GO_Terms", "")).strip()
-                     or "Virulence")
+            quote = _virulence_function_label(edge.get("GO_Terms", ""))
         elif source_name == "UniProt":
             # Co-mention edges (find_uniprot_function_mentions): the real
             # verbatim quoted Sentence stays byte-for-byte recognizable as
@@ -4487,7 +4627,9 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
             sentence = str(edge.get("Sentence") or edge.get("Evidence") or "").strip()
             quote = f"{sentence} | Functions: {functions_desc}" if sentence else functions_desc
         else:
-            quote = edge.get("Sentence") or edge.get("Evidence") or ""
+            # ImmuneXpresso: plain-language direction sentence (paper count/
+            # enrichment score no longer shown -- see KB_RELATION_LABEL note).
+            quote = _immunexpresso_evidence_sentence(elem_a, elem_b, direction)
         quote = str(quote).strip()
 
         part_a_rows.append({
@@ -4497,7 +4639,7 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
         })
         part_b_rows.append({
             "id": record_id, "evidence_source": source_name,
-            "element_a": elem_a, "relation": f"{relation} ({direction})" if direction else relation,
+            "element_a": elem_a, "relation": relation,
             "element_b": elem_b, "quote": quote,
             "_run_count": run_count,
         })
@@ -4513,19 +4655,8 @@ def build_kb_sourced_table2_rows(elements: list, gene_info: dict = None, sample_
         # this function's own docstring for why. Both still print under the
         # single "UniProt" source count above; this second clause just
         # clarifies which call covered which subset this run.
-        llm_note = (f"{PUBMED_EXTRACTION_RUNS} pooled batched LLM run(s) for {len(uniprot_edges)} UniProt "
-                    f"co-mention row(s)' Relation labeling" if uniprot_edges else
-                    "no UniProt co-mention rows this run, so no Relation-labeling LLM call")
-        n_virulence = sum(1 for e in virulence_edges if e.get("Accession"))
-        virulence_llm_note = (f"{PUBMED_EXTRACTION_RUNS} pooled batched LLM run(s) for {len(virulence_edges)} "
-                               f"UniProt virulence-protein row(s)' description labeling" if virulence_edges else
-                               "no UniProt virulence-protein rows this run, so no description-labeling LLM call")
-        print(f"KB-sourced Table 2/3: {len(part_a_rows)} row(s) built directly from real KB data "
-              f"(by source: {dict(src_counts)}) -- no LLM call for ImmuneXpresso, {llm_note}; "
-              f"{n_virulence} UniProt virulence-protein row(s) (KW-0843) use a fixed deterministic "
-              f"Relation label, {virulence_llm_note}. "
-              f"{n_virulence_excluded} real KW-0843 match(es) excluded as conflicting with the study "
-              f"context per the LLM's Include/Exclude judgment (see log above for reasons).")
+        print(f"KB-sourced Table 2/3: {len(part_a_rows)} row(s) built in Python from real KB data, "
+              f"no GPT call (by source: {dict(src_counts)}).")
     elif n_virulence_excluded:
         # part_a_rows can legitimately be empty (e.g. every real KB edge
         # got excluded/deduped away) while exclusions still happened --
@@ -4967,7 +5098,7 @@ def build_table3_knowledge_graph(sample: str, table3_df: pd.DataFrame, obs_df: p
             continue
         seen_edges.add(key)
         evidence_source = str(row.get("Evidence Source", "")).strip()
-        if evidence_source.lower() == "uniprot" and relation == VIRULENCE_RELATION_LABEL:
+        if evidence_source.lower() == "uniprot" and relation in (VIRULENCE_RELATION_LABEL, KB_RELATION_LABEL):
             # Microbe -> Protein edge: the fixed, real UniProt KW-0843
             # relation is now a short, consistent label -- the edge no
             # longer needs to carry the distinguishing Function text,
@@ -4985,6 +5116,11 @@ def build_table3_knowledge_graph(sample: str, table3_df: pd.DataFrame, obs_df: p
                 edge_specs.append((tgt, func_label, ""))
             continue
         label = _graph_edge_label(relation, evidence_source)
+        if evidence_source.lower() == "immunexpresso" and relation == KB_RELATION_LABEL:
+            # Direction now lives in Supporting Evidence, not Relation.
+            ev = str(row.get("Supporting Evidence", "")).lower()
+            label = ("positive" if "positively influence" in ev else
+                     "negative" if "negatively influence" in ev else "direction unknown")
         edge_specs.append((src, tgt, label))
 
     if not edge_specs:
@@ -5240,12 +5376,16 @@ def _build_id_to_elements_map(table2_df: pd.DataFrame, table3_df: pd.DataFrame) 
     return id_to_elements
 
 
-_PROMPT3_TABLE_ROW_RE = re.compile(r"^\|(.+)\|\s*$")
-_PROMPT3_DIVIDER_ROW_RE = re.compile(r"^\|[\s\-:|]+\|\s*$")
+# A table row = any line with 4+ pipes (5 columns), with or without outer
+# pipes -- the prompt asks for "pipe-separated ... without divider", and
+# GPT-5 writes rows with no leading/trailing "|", which the old
+# outer-pipe-only pattern silently skipped (no grounding at all).
+_PROMPT3_TABLE_ROW_RE = re.compile(r"^(?=(?:[^|]*\|){4})\s*\|?(.+?)\|?\s*$")
+_PROMPT3_DIVIDER_ROW_RE = re.compile(r"^\s*\|?[\s\-:|]*-[\s\-:|]*\|?\s*$")
 _PROMPT3_ID_CELL_RE = re.compile(r"([A-Za-z0-9_\-\.:]+)\s*\(([^)]*)\)")
 
 
-def _ground_prompt3_table(interp: str, id_to_elements: dict):
+def _ground_prompt3_table(interp: str, id_to_elements: dict, quiet: bool = False):
     """Deterministic (Python, never LLM-trusted) citation-grounding pass
     over Prompt 3's own Reporting Instructions item-1 table: for every
     row, every cited ID is checked against _build_id_to_elements_map's
@@ -5287,12 +5427,22 @@ def _ground_prompt3_table(interp: str, id_to_elements: dict):
             cited = _PROMPT3_ID_CELL_RE.findall(id_cell)
             grounded_ids = []
             for id_val, source_label in cited:
+                # "PMID:29023524" / "PMID 29023524" / "29023524" all mean the
+                # same PubMed record -- compare on the bare ID.
+                id_val = re.sub(r"^(?:PMID|PubMed)\s*:?\s*", "", id_val.strip(), flags=re.I)
+                label = source_label.strip().lower()
+                if "pmid" not in label and "pubmed" not in label:
+                    # ImmuneXpresso/UniProt IDs: Python-built KB rows, kept
+                    # as cited (only PMID citations are verified here).
+                    grounded_ids.append(f"{id_val.strip()} ({source_label.strip()})")
+                    continue
                 real_elements = id_to_elements.get(id_val.strip(), set())
                 if len(real_elements & group_elements) >= 2:
                     grounded_ids.append(f"{id_val.strip()} ({source_label.strip()})")
             if not grounded_ids:
                 dropped_groups.append(group_name)
-                print(f"[Prompt 3] Dropped fabricated group \"{group_name}\" -- "
+                if not quiet:
+                    print(f"[Prompt 3] Dropped fabricated group \"{group_name}\" -- "
                       f"none of its cited ID(s) ({id_cell}) actually connect 2+ of "
                       f"its claimed elements ({elements_cell}) in real Table 2/3 rows.")
                 continue
@@ -5334,7 +5484,9 @@ def _ground_prompt3_narrative(interp: str, dropped_groups: list) -> str:
 
 def build_table3_interpretation(sample: str, elements: list, obs_df: pd.DataFrame, table1_df: pd.DataFrame,
                                  table2_df: pd.DataFrame, table3_df: pd.DataFrame, out_dir: Path,
-                                 context: str = "disease") -> str:
+                                 context: str = "disease", model: str = None,
+                                 max_tokens: int = None, out_suffix: str = "",
+                                 standalone: bool = False) -> str:
     """Prompt 3, verbatim per BioShift_Prompts_0729_PD -- interprets Table
     1/Table 2/Table 3 against this dataset's real Observed Shift values.
     Trimmed version of BioShift.py's own build_table3_interpretation: same
@@ -5344,17 +5496,47 @@ def build_table3_interpretation(sample: str, elements: list, obs_df: pd.DataFram
     the full multi-layer network figure is out of scope for this trimmed
     script, so this saves and returns just the raw interpretation text."""
     elements = [str(e).strip() for e in elements if str(e).strip()]
-    table1_text = table1_df.to_csv(index=False) if table1_df is not None and not table1_df.empty else "(no Table 1 rows)"
-    table2_text = table2_df.to_csv(index=False) if table2_df is not None and not table2_df.empty else "(no Table 2 relationships found)"
+    # None = table not supplied (P3 run from a pre-built evidence table);
+    # empty DataFrame = table was built but found nothing. The model is
+    # told which, so it doesn't read "not provided" as "no evidence".
+    table1_text = ("(Table 1 not provided for this run)" if table1_df is None
+                   else table1_df.to_csv(index=False) if not table1_df.empty else "(no Table 1 rows)")
+    table2_text = ("(Table 2 not provided for this run)" if table2_df is None
+                   else table2_df.to_csv(index=False) if not table2_df.empty else "(no Table 2 relationships found)")
     table3_text = table3_df.to_csv(index=False) if table3_df is not None and not table3_df.empty else "(no Table 3 pairwise relationships found)"
-    element_list_text = _build_observed_shift_block(elements, obs_df)
+    if standalone:
+        # Evidence-CSV-only run: no observed shifts exist, so say so plainly
+        # instead of handing the model a blank Observed Shift column.
+        element_list_text = (
+            "Element\n" + "\n".join(elements) + "\n\n"
+            "(Observed Shift values were NOT provided for this run. Do not infer or "
+            "assume any shift direction. In the \"Observation Summary\" column write "
+            "\"Not evaluated -- no observed shifts provided\", and in the narrative "
+            "describe mechanisms only, without assessing consistency with observed "
+            "changes.)")
+    else:
+        element_list_text = _build_observed_shift_block(elements, obs_df)
     study_context_text = _study_context_block_for_prompt()
 
     prompt_template = get_table_interpretation_prompt(context)
     prompt = prompt_template.format(table1=table1_text, table2=table2_text, table3=table3_text,
                                      element_list=element_list_text, study_context=study_context_text)
+    use_model = model or DEFAULT_MODEL
+    print(f"GPT-3 (Prompt 3 interpretation) model: {use_model}"
+          + (f" (max_completion_tokens={max_tokens}, reasoning_effort="
+             f"{REASONING_EFFORT or 'API default'})" if _is_reasoning_model(use_model) else ""))
+    if _is_reasoning_model(use_model):
+        print(f"Waiting for {use_model} -- it reasons before answering, typically 1-4 min "
+              f"(faster with REASONING_EFFORT=low in config.txt). Do not press Ctrl+C.")
     with _StepTimer("Prompt 3 - LLM interpretation"):
-        interp = call_openai(prompt)
+        interp = call_openai(prompt, model=use_model, max_tokens=max_tokens)  # GPT-3 (Prompt 3: interpretation)
+    if not interp.strip():
+        print("WARNING: Prompt 3 returned no text -- see the OpenAI messages above.")
+    # Save the model's answer right away, so a later failure (or Ctrl+C)
+    # never loses a completed, paid-for response; overwritten below with
+    # the grounded version.
+    ensure_dir(Path(out_dir))
+    (Path(out_dir) / f"{sample}_Prompt3_output{out_suffix}.txt").write_text(interp, encoding="utf-8")
 
     # Deterministic citation-grounding pass over the LLM's own Reporting
     # Instructions item-1 table and item-2 narrative -- drops any
@@ -5373,11 +5555,71 @@ def build_table3_interpretation(sample: str, elements: list, obs_df: pd.DataFram
     interp = _replace_prompt3_trailing_sections(interp, real_unsupported)
 
     ensure_dir(Path(out_dir))
-    out_file = Path(out_dir) / f"{sample}_Prompt3_output.txt"
+    out_file = Path(out_dir) / f"{sample}_Prompt3_output{out_suffix}.txt"
     out_file.write_text(interp, encoding="utf-8")
     print(f"Prompt 3 (Table1+Table2+Table3 interpretation) saved: {out_file}")
 
     return interp
+
+
+# ─────────────────── Pre-built evidence tables (--mode P3) ─────────────────
+_TABLE_REQUIRED_COLS = {
+    "Table3": ["PMID or Knowledge Base ID", "Evidence Source", "Element A",
+               "Relation", "Element B", "Supporting Evidence"],
+    "Table2": ["Biological Relationship Name", "PMID or Knowledge Base ID",
+               "Evidence Source", "List of Elements", "Quoted Evidence"],
+    "Table1": [],  # free-form; passed to Prompt 3 as-is
+}
+
+
+def _evidence_table_path(name: str) -> Path:
+    """Accepts a full/relative path to an existing CSV as-is; otherwise a
+    file name in EvidenceTable/ (".csv" optional)."""
+    as_given = Path(name.strip().strip('"'))
+    if as_given.suffix.lower() == ".csv" and as_given.exists() and len(as_given.parts) > 1:
+        return as_given.resolve()
+    return _evidence_table_path_in_folder(name)
+
+
+def _evidence_table_path_in_folder(name: str) -> Path:
+    """--mode P3: --sample is the evidence table's own file name, e.g.
+    CaseStudy_Table3 (".csv" optional) -> EvidenceTable/CaseStudy_Table3.csv."""
+    name = re.sub(r"\.csv$", "", name.strip(), flags=re.I)
+    return FOLDERS["evidence"] / f"{name}.csv"
+
+
+def load_evidence_table(path: Path, which: str = "Table3") -> pd.DataFrame:
+    """Reads a user-supplied Table 1/2/3 CSV as all-text (so IDs like
+    35578115 or CL_0000236 are never turned into floats/NaN), trims header
+    and cell whitespace, drops fully blank rows, and checks the columns
+    Prompt 3 and the citation-grounding pass rely on. Exits with a clear
+    message rather than sending a malformed table to the model."""
+    path = Path(path)
+    if not path.exists():
+        sys.exit(f"Evidence table not found: {path}")
+    df = None
+    for enc in ("utf-8", "utf-8-sig", "cp1252", "latin-1"):
+        try:
+            df = pd.read_csv(path, encoding=enc, dtype=str, keep_default_na=False)
+            break
+        except UnicodeDecodeError:
+            continue
+    if df is None:
+        df = pd.read_csv(path, encoding="utf-8", encoding_errors="replace",
+                         dtype=str, keep_default_na=False)
+    df.columns = [str(c).strip().lstrip("﻿") for c in df.columns]
+    df = df.apply(lambda col: col.str.strip())
+    df = df[(df != "").any(axis=1)].reset_index(drop=True)
+    missing = [c for c in _TABLE_REQUIRED_COLS.get(which, []) if c not in df.columns]
+    if missing:
+        sys.exit(f"{path.name}: missing required column(s) {missing}. "
+                 f"Found: {list(df.columns)}")
+    print(f"Loaded {which} from {path}: {len(df)} row(s).")
+    return df
+
+
+def _model_file_tag(model: str) -> str:
+    return re.sub(r"[^A-Za-z0-9.\-]+", "-", model or "").strip("-")
 
 
 # ─────────────────── Evidence-strength workbook (all 3 tables + Prompt 3) ──
@@ -5585,25 +5827,42 @@ class _TimestampedTee:
         self._log.flush()
 
 
-def _run_one_sample(sample: str, mode: str, context: str) -> None:
+def _run_one_sample(sample: str, mode: str, context: str, model_override: str = None,
+                    table1_name: str = None, table2_name: str = None,
+                    explicit_tables: bool = False) -> None:
     """Runs the full P1/P12/P123 pipeline for one sample. Split out of
     main() so --sample all can call this once per CSV in ObservedShift/
     instead of once per process invocation. Each sample still gets its
     own <sample>_log.txt and its own real cost total (via
     get_cost_summary_since), not the cumulative total across a batch."""
-    observed_path = FOLDERS["observed"] / f"{sample}.csv"
-    if not observed_path.exists():
-        sys.exit(f"Observed-shift CSV not found: {observed_path}")
+    if mode == "P3":
+        # --sample is the evidence table's file name (e.g. CaseStudy_Table3).
+        t3_path = _evidence_table_path(sample)
+        sample = t3_path.stem
+        if not t3_path.exists():
+            sys.exit(f"Evidence table not found: {t3_path}")
+        observed_path = None  # standalone: the evidence CSV is the only input
+    else:
+        observed_path = FOLDERS["observed"] / f"{sample}.csv"
+        if not observed_path.exists():
+            sys.exit(f"Observed-shift CSV not found: {observed_path}")
 
-    out_dir = FOLDERS["output"] / sample
+    out_dir = FOLDERS["evidence_output"] if mode == "P3" else FOLDERS["output"] / sample
     ensure_dir(out_dir)
+
+    # Prompt 3 model: --model > PROMPT3_MODEL (config.txt) > DEFAULT_MODEL.
+    prompt3_model = (model_override or "").strip() or load_prompt3_model()
+    prompt3_max_tokens = load_prompt3_max_tokens(prompt3_model)
+    # P3 outputs/log are tagged with the model so they never overwrite a
+    # full-pipeline run's files (or a run with a different model).
+    p3_suffix = f"_{_model_file_tag(prompt3_model)}" if mode == "P3" else ""
 
     # Every print() made during this run is duplicated, timestamped, into
     # <sample>_log.txt in this sample's own out_dir -- same convention as
     # BioShift.py's own per-sample log.txt -- so the total run time (and
     # everything that led to it) is recorded on disk, not just shown once
     # in the terminal.
-    log_path = out_dir / f"{sample}_log.txt"
+    log_path = out_dir / (f"{sample}_log{p3_suffix}.txt" if mode == "P3" else f"{sample}_log.txt")
     log_fh = open(log_path, "w", encoding="utf-8")
     real_stdout = sys.stdout
     sys.stdout = _TimestampedTee(real_stdout, log_fh)
@@ -5612,7 +5871,7 @@ def _run_one_sample(sample: str, mode: str, context: str) -> None:
     step_snapshot = _snapshot_step_times()
     log_fh.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] "
                  f"BioShiftUpdated run started -- sample={sample}  mode={mode}  "
-                 f"context={context}\n")
+                 f"context={context}  prompt3_model={prompt3_model}\n")
     log_fh.flush()
 
     # Re-read every tunable config.txt knob fresh, right here, at the
@@ -5637,7 +5896,9 @@ def _run_one_sample(sample: str, mode: str, context: str) -> None:
     # restart.)
     global PUBMED_MAX_ABSTRACTS, PUBMED_SEARCH_POOL_SIZE, PUBMED_EXTRACTION_RUNS, \
         MAX_CONCURRENT_LLM_CALLS, COSHIFT_MAX_CONCURRENT_LLM_CALLS, PUBMED_USE_CACHE, \
-        SAMPLE_MODEL, COSHIFT_MODEL, COSHIFT_MAX_TOKENS, KNOWLEDGE_BASE, NCBI_API_KEY
+        SAMPLE_MODEL, COSHIFT_MODEL, COSHIFT_MAX_TOKENS, KNOWLEDGE_BASE, NCBI_API_KEY, \
+        REASONING_EFFORT
+    REASONING_EFFORT = load_reasoning_effort()
     PUBMED_MAX_ABSTRACTS = load_pubmed_max_abstracts()
     PUBMED_SEARCH_POOL_SIZE = load_pubmed_search_pool_size()
     PUBMED_EXTRACTION_RUNS = load_pubmed_extraction_runs()
@@ -5659,10 +5920,83 @@ def _run_one_sample(sample: str, mode: str, context: str) -> None:
           f"KNOWLEDGE_BASE={KNOWLEDGE_BASE}")
 
     try:
-        elements, obs_df = extract_elements(observed_path)
-        print(f"Loaded {len(elements)} element(s) from {observed_path}: {list(elements)}")
+        p3_table1 = p3_table2 = None
+        p3_standalone = False
+        if mode == "P3":
+            # Inputs, all from EvidenceTable/:
+            #   <name>.csv                    Table 3 (required)
+            #   <name with Table3->Table1>    Table 1 (optional; supplies the
+            #                                 element list + Observed Shift)
+            #   <name with Table3->Table2>    Table 2 (optional)
+            table3 = load_evidence_table(t3_path, "Table3")
+            for which, given in (("Table1", table1_name), ("Table2", table2_name)):
+                if explicit_tables:
+                    # --table3 run: use exactly the tables named in the command.
+                    if not given:
+                        print(f"{which}: not given in the command -- not used.")
+                        continue
+                    opt = _evidence_table_path(given)
+                    if not opt.exists():
+                        sys.exit(f"--{which.lower()}: file not found: {opt}")
+                else:
+                    opt = t3_path.with_name(re.sub(r"Table3", which, t3_path.name, flags=re.I))
+                if opt == t3_path:
+                    continue
+                if opt.exists():
+                    df = load_evidence_table(opt, which)
+                    if which == "Table1":
+                        p3_table1 = df
+                    else:
+                        p3_table2 = df
+                else:
+                    print(f"{which}: {opt.name} not found -- not used.")
+            t1_shift_col = None
+            if p3_table1 is not None:
+                t1_shift_col = next((c for c in p3_table1.columns
+                                     if "observed" in c.lower() and "shift" in c.lower()), None)
+            if p3_table1 is not None and "Element" in p3_table1.columns and t1_shift_col:
+                # Element list + Observed Shift straight from Table 1.
+                obs_df = p3_table1[["Element", t1_shift_col]].rename(
+                    columns={t1_shift_col: "Observed Shift"})
+                elements = [e for e in obs_df["Element"].tolist() if e]
+                print(f"{len(elements)} element(s) + Observed Shift taken from Table 1.")
+            else:
+                # Table 3 only: element list = every Element A/B; no shifts.
+                p3_standalone = True
+                elements = list(dict.fromkeys(
+                    [e for pair in zip(table3["Element A"], table3["Element B"]) for e in pair if e]))
+                obs_df = pd.DataFrame({"Element": elements, "Observed Shift": [""] * len(elements)})
+                print(f"No Table 1 with Element/Observed Shift columns -- {len(elements)} element(s) "
+                      f"taken from {t3_path.name}; Prompt 3 is told no observed shifts exist.")
+            # Names mangled by a non-UTF-8 save (e.g. IL-1α -> "IL-1?") no
+            # longer match Table 3 and become indistinguishable.
+            bad = [e for e in elements if "?" in e or "\ufffd" in e]
+            dup = sorted({e for e in elements if elements.count(e) > 1})
+            if bad or dup:
+                print(f"WARNING: element name(s) look corrupted or duplicated: {sorted(set(bad + dup))}. "
+                      f"Greek letters were probably lost when the CSV was saved -- fix the names "
+                      f"(e.g. IL-1A / IL-1B, matching Table 3) and save as 'CSV UTF-8'.")
+            if not p3_standalone:
+                in_t3 = set(table3["Element A"]) | set(table3["Element B"])
+                print(f"Table 3 covers {sum(e in in_t3 for e in elements)}/{len(elements)} element(s).")
+        else:
+            elements, obs_df = extract_elements(observed_path)
+            print(f"Loaded {len(elements)} element(s) from {observed_path}: {list(elements)}")
 
-        table1 = table2 = table3 = interp = None
+        table1, table2, interp = p3_table1, p3_table2, None
+        if mode != "P3":
+            table3 = None
+
+        if mode == "P3":
+            # Prompt 3 only, on the EvidenceTable/ CSVs -- no PubMed, no
+            # Prompt 1/2, no ObservedShift file.
+            with _StepTimer(f"STEP 3 TOTAL (Prompt 3 on evidence table, {prompt3_model})"):
+                interp = build_table3_interpretation(
+                    sample, list(elements), obs_df, table1, table2, table3, out_dir,
+                    context=context, model=prompt3_model, max_tokens=prompt3_max_tokens,
+                    out_suffix=p3_suffix, standalone=p3_standalone)
+            print(f"\n=== Prompt 3 ({prompt3_model}, evidence table: {t3_path.name}) ===")
+            print(interp)
 
         if mode in ("P1", "P12", "P123"):
             with _StepTimer("STEP 1 TOTAL (Prompt 1 -> Table 1)"):
@@ -5684,7 +6018,8 @@ def _run_one_sample(sample: str, mode: str, context: str) -> None:
         if mode == "P123":
             with _StepTimer("STEP 3 TOTAL (Prompt 3 -> interpretation)"):
                 interp = build_table3_interpretation(
-                    sample, list(elements), obs_df, table1, table2, table3, out_dir, context=context)
+                    sample, list(elements), obs_df, table1, table2, table3, out_dir, context=context,
+                    model=prompt3_model, max_tokens=prompt3_max_tokens)
             print("\n=== Prompt 3 (biological interpretation -- Table 3 knowledge graph only; "
                   "the full multi-layer network figure is out of scope for this trimmed script) ===")
             print(interp)
@@ -5700,9 +6035,18 @@ def _run_one_sample(sample: str, mode: str, context: str) -> None:
         # always has at least Table 1's own pool/citations to report;
         # table2/table3/interp are simply None (empty Tab 3 / no Prompt 3
         # cross-reference) for a P1-only run.
-        if table1 is not None:
+        if table1 is not None and mode != "P3":
             with _StepTimer("Evidence-strength workbook build"):
                 build_evidence_strength_workbook(sample, table1, table2, table3, interp, out_dir)
+    except BaseException as e:
+        # Record why the run stopped in the log too (tracebacks go to
+        # stderr, which the log does not capture).
+        import traceback
+        if isinstance(e, KeyboardInterrupt):
+            print("RUN INTERRUPTED (Ctrl+C) -- stopped before finishing.")
+        else:
+            print("RUN FAILED:\n" + traceback.format_exc())
+        raise
     finally:
         # Printed (and so logged, via the tee above) whether the run
         # finished cleanly or hit an error -- so log.txt always records how
@@ -5739,17 +6083,42 @@ def main():
         description="Isolated review: Prompt 1 -> Table 1, Prompt 2 -> Table 2/Table 3, "
                     "Prompt 3 -> biological interpretation (network figure NOT included -- "
                     "out of scope for this trimmed script).")
-    parser.add_argument("--sample", required=True,
+    parser.add_argument("--table3", default=None,
+                         help="Run GPT on evidence tables only (implies --mode P3). Table 3 CSV "
+                              "name in EvidenceTable/ (e.g. CaseStudy_Table3) or a full path.")
+    parser.add_argument("--table1", default=None,
+                         help="With --table3: Table 1 CSV (element list + Observed Shift + "
+                              "literature direction). Optional.")
+    parser.add_argument("--table2", default=None,
+                         help="With --table3: Table 2 CSV. Optional.")
+    parser.add_argument("--sample", default=None,
                          help="Sample name, e.g. Testdata (reads ObservedShift/<sample>.csv), "
                               "or 'all' to run every *.csv already in ObservedShift/, one "
-                              "after another.")
-    parser.add_argument("--mode", default="P1", choices=["P1", "P12", "P123"],
+                              "after another. With --mode P3: the evidence table's file name, "
+                              "e.g. CaseStudy_Table3 (reads EvidenceTable/CaseStudy_Table3.csv, "
+                              "plus CaseStudy_Table1.csv/_Table2.csv there if present), "
+                              "or 'all' for every *.csv in EvidenceTable/.")
+    parser.add_argument("--mode", default="P1", choices=["P1", "P12", "P123", "P3"],
                          help="Cumulative, in the order the real pipeline runs: "
                               "P1 = Prompt 1 only -> Table 1 (default); "
                               "P12 = Prompt 1 -> Table 1, then Prompt 2 -> Table 2/Table 3; "
                               "P123 = Prompt 1 -> Prompt 2 -> Prompt 3 (full run, same as "
-                              "the old 'all').")
+                              "the old 'all'); "
+                              "P3 = Prompt 3 ONLY, on a pre-built evidence table "
+                              "(EvidenceTable/<sample>.csv). No PubMed retrieval or Prompt 1/2.")
+    parser.add_argument("--model", default=None,
+                         help="Model for Prompt 3, e.g. gpt-5. Overrides PROMPT3_MODEL/"
+                              "DEFAULT_MODEL in config.txt. Prompts 1/2 are unaffected.")
     args = parser.parse_args()
+    explicit_tables = bool(args.table3)
+    if explicit_tables:
+        if args.sample:
+            parser.error("use either --table3 or --sample, not both.")
+        args.sample, args.mode = args.table3, "P3"
+    elif args.table1 or args.table2:
+        parser.error("--table1/--table2 need --table3.")
+    elif not args.sample:
+        parser.error("give --table3 (evidence-table run) or --sample.")
 
     # Study context is fixed to "disease" -- it was the only choice
     # --context ever accepted (choices=["disease"]), so it's no longer a
@@ -5759,9 +6128,15 @@ def main():
     context = "disease"
 
     if args.sample.strip().lower() == "all":
-        sample_paths = sorted(FOLDERS["observed"].glob("*.csv"))
+        src = FOLDERS["evidence"] if args.mode == "P3" else FOLDERS["observed"]
+        sample_paths = sorted(src.glob("*.csv"))
+        if args.mode == "P3":
+            # <name>_Table1.csv / _Table2.csv are companions of a Table 3
+            # file, not runs of their own.
+            sample_paths = [p for p in sample_paths
+                            if not re.search(r"Table[12]$", p.stem, flags=re.I)]
         if not sample_paths:
-            sys.exit(f"--sample all: no *.csv files found in {FOLDERS['observed']}")
+            sys.exit(f"--sample all: no *.csv files found in {src}")
         samples = [p.stem for p in sample_paths]
         print(f"--sample all: found {len(samples)} sample(s): {samples}")
     else:
@@ -5771,7 +6146,9 @@ def main():
     for i, sample in enumerate(samples, 1):
         if len(samples) > 1:
             print(f"\n{'=' * 70}\n[{i}/{len(samples)}] Sample: {sample}\n{'=' * 70}")
-        _run_one_sample(sample, args.mode, context)
+        _run_one_sample(sample, args.mode, context, model_override=args.model,
+                        table1_name=args.table1, table2_name=args.table2,
+                        explicit_tables=explicit_tables)
 
     if len(samples) > 1:
         elapsed = time.time() - batch_start
